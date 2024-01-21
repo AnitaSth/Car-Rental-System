@@ -96,7 +96,7 @@ const CarDetailsPage = () => {
                         >
                             Rent
                         </button>
-                        <RentModal />
+                        <RentModal car={car} />
                     </div>
                 </div>
             </div>

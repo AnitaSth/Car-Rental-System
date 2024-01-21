@@ -7,6 +7,9 @@ import HomePage from "./pages/HomePage.jsx";
 import AboutPage from "./pages/AboutPage.jsx";
 import CarsPage from "./pages/CarsPage.jsx";
 import CarDetailsPage from "./pages/CarDetailsPage.jsx";
+import "react-datetime-picker/dist/DateTimePicker.css";
+import "react-calendar/dist/Calendar.css";
+import "react-clock/dist/Clock.css";
 
 const router = createBrowserRouter([
     {
