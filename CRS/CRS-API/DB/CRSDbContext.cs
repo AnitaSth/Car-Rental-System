@@ -13,10 +13,13 @@ namespace CRS_API.DB
         }
 
         public DbSet<Car> Cars { get; set; }
+		public DbSet<User> Users { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			base.OnModelCreating(modelBuilder);
+
+			modelBuilder.Entity<User>().HasIndex(u => u.PhoneNumber).IsUnique();
 
 			// Seed Car data
 
@@ -35,7 +38,7 @@ namespace CRS_API.DB
 					PassengerSeat = 5,
 					RentalPrice = 2800,
 					Condition = Condition.Excellent,
-					Images = "ImageURL1",
+					Image = "ImageURL1",
 					Availability = true
 				},
 				new Car
@@ -51,7 +54,7 @@ namespace CRS_API.DB
 					PassengerSeat = 4,
 					RentalPrice = 2000,
 					Condition = Condition.Bad,
-					Images = "ImageURL2",
+					Image = "ImageURL2",
 					Availability = true
 				},
 				new Car
@@ -67,7 +70,7 @@ namespace CRS_API.DB
 					PassengerSeat = 5,
 					RentalPrice = 2500,
 					Condition = Condition.Good,
-					Images = "ImageURL3",
+					Image = "ImageURL3",
 					Availability = true
 				},
 				new Car
@@ -83,7 +86,7 @@ namespace CRS_API.DB
 					PassengerSeat = 4,
 					RentalPrice = 3000,
 					Condition = Condition.Excellent,
-					Images = "ImageURL4",
+					Image = "ImageURL4",
 					Availability = true
 				},
 				new Car
@@ -99,7 +102,7 @@ namespace CRS_API.DB
 					PassengerSeat = 5,
 					RentalPrice = 4500,
 					Condition = Condition.Good,
-					Images = "ImageURL5",
+					Image = "ImageURL5",
 					Availability = true
 				}
 			};

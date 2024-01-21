@@ -20,7 +20,7 @@ const CarDetailsPage = () => {
         <div>
             <div className="container mx-auto max-w-[1100px] my-20">
                 <div className="flex gap-x-12">
-                    <img src={car.images} className="w-[600px] h-full" />
+                    <img src={car.image} className="w-[600px] h-full" />
                     <div>
                         <div className="flex flex-col gap-y-2">
                             <h1 className="text-4xl font-bold">

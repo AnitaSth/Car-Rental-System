@@ -16,7 +16,7 @@ namespace CRS_API.Models.Domain
 		public int PassengerSeat { get; set; }
 		public int RentalPrice { get; set; }
 		public Condition Condition { get; set; }
-		public string Images { get; set; }
+		public string Image { get; set; }
 		public bool Availability { get; set; } = true;
 	}
 }

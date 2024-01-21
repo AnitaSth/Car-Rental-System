@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using CRS_API.Models.DTO;
 using CRS_API.DB;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CRS_API.Controllers
 {
@@ -20,6 +21,7 @@ namespace CRS_API.Controllers
 
         // Get all cars
         [HttpGet]
+		[Authorize(Roles = "Admin, Customer, VehicleOwner")]
 		public async Task<IActionResult> GetAll()
 		{
 			List<Car> cars = await _db.Cars.ToListAsync();
@@ -42,7 +44,7 @@ namespace CRS_API.Controllers
 					PassengerSeat = car.PassengerSeat,
 					RentalPrice = car.RentalPrice,
 					Condition = car.Condition.ToString(),
-					Images = car.Images,
+					Image = car.Image,
 					Availability = car.Availability
 				});	
 			}
@@ -51,9 +53,9 @@ namespace CRS_API.Controllers
 		}
 
 		// Get car by Id
-		[HttpGet]
-		[Route("{id:int}")]
-		public async Task<IActionResult> GetById([FromRoute] int id)
+		[HttpGet("{id:int}")]
+		[Authorize(Roles = "Admin, Customer, VehicleOwner")]
+		public async Task<IActionResult> GetById(int id)
 		{
 			Car? car = await _db.Cars.FirstOrDefaultAsync(car => car.Id == id);
 			
@@ -75,7 +77,7 @@ namespace CRS_API.Controllers
 				PassengerSeat = car.PassengerSeat,
 				RentalPrice = car.RentalPrice,
 				Condition = car.Condition.ToString(),
-				Images = car.Images,
+				Image = car.Image,
 				Availability = car.Availability
 			};
 

@@ -22,7 +22,7 @@ namespace CRS_API
 					PassengerSeat = 5,
 					RentalPrice = 2000,
 					Condition = Condition.Excellent.ToString(),
-					Images = "ImageURL1",
+					Image = "ImageURL1",
 					Availability = true
 				},
 				new CarDto
@@ -38,7 +38,7 @@ namespace CRS_API
 					PassengerSeat = 4,
 					RentalPrice = 2000,
 					Condition = Condition.Bad.ToString(),
-					Images = "ImageURL2",
+					Image = "ImageURL2",
 					Availability = true
 				},
 				new CarDto
@@ -54,7 +54,7 @@ namespace CRS_API
 					PassengerSeat = 5,
 					RentalPrice = 2500,
 					Condition = Condition.Good.ToString(),
-					Images = "ImageURL3",
+					Image = "ImageURL3",
 					Availability = true
 				},
 				new CarDto
@@ -70,7 +70,7 @@ namespace CRS_API
 					PassengerSeat = 4,
 					RentalPrice = 3000,
 					Condition = Condition.Excellent.ToString(),
-					Images = "ImageURL4",
+					Image = "ImageURL4",
 					Availability = true
 				},
 				new CarDto
@@ -86,12 +86,12 @@ namespace CRS_API
 					PassengerSeat = 5,
 					RentalPrice = 4000,
 					Condition = Condition.Good.ToString(),
-					Images = "ImageURL5",
+					Image = "ImageURL5",
 					Availability = true
 				}
 			};
 
-			return cars.Select(c => new CarDto { Id = c.Id, Manufacturer = c.Manufacturer, Model = c.Model, LicensePlate = c.LicensePlate, Color = c.Color, FuelType = c.FuelType, TransmissionType = c.TransmissionType , Mileage = c.Mileage, PassengerSeat = c.PassengerSeat, RentalPrice = c.RentalPrice, Condition = c.Condition, Images = c.Images, Availability = c.Availability }).ToList();	
+			return cars.Select(c => new CarDto { Id = c.Id, Manufacturer = c.Manufacturer, Model = c.Model, LicensePlate = c.LicensePlate, Color = c.Color, FuelType = c.FuelType, TransmissionType = c.TransmissionType , Mileage = c.Mileage, PassengerSeat = c.PassengerSeat, RentalPrice = c.RentalPrice, Condition = c.Condition, Image = c.Image, Availability = c.Availability }).ToList();	
 		}
 	}
 }

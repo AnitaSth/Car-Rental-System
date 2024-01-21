@@ -20,7 +20,7 @@ const CarsPage = () => {
                         key={car.id}
                     >
                         <figure className="w-full h-56">
-                            <img src={car.images} alt="Car" />
+                            <img src={car.image} alt="Car" />
                         </figure>
                         <div className="card-body">
                             <div className="flex flex-col gap-y-2 my-4">

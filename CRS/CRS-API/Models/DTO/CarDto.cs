@@ -15,7 +15,7 @@ namespace CRS_API.Models.DTO
 		public int PassengerSeat { get; set; }
 		public int RentalPrice { get; set; }
 		public string Condition { get; set; }
-		public string Images { get; set; }
+		public string Image { get; set; }
 		public bool Availability { get; set; } = true;
 	}
 }

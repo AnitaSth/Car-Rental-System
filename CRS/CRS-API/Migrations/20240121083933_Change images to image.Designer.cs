@@ -3,6 +3,7 @@ using CRS_API.DB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CRS_API.Migrations
 {
     [DbContext(typeof(CRSDbContext))]
-    partial class CRSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240121083933_Change images to image")]
+    partial class Changeimagestoimage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -155,34 +158,6 @@ namespace CRS_API.Migrations
                             RentalPrice = 4500,
                             TransmissionType = 0
                         });
-                });
-
-            modelBuilder.Entity("CRS_API.Models.Domain.User", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("PasswordHash")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
-                    b.Property<int>("Role")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PhoneNumber")
-                        .IsUnique();
-
-                    b.ToTable("Users");
                 });
 #pragma warning restore 612, 618
         }
