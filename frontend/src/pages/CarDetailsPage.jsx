@@ -1,20 +1,37 @@
-import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Link, useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import RentModal from "../components/RentModal";
+import { useAuth } from "../hooks/useAuth";
 
 const CarDetailsPage = () => {
     const [car, setCar] = useState([]);
 
     const { id: carId } = useParams();
 
+    const { user } = useAuth();
+    const navigate = useNavigate();
+
     useEffect(() => {
         axios
-            .get(`https://localhost:7056/api/Cars/${carId}`, {
+            .get(`https://localhost:7056/api/cars/${carId}`, {
                 withCredentials: true,
+                // headers: { Authorization: `Bearer ${user.token}` },
             })
-            .then((res) => setCar(res.data));
+            .then((res) => setCar(res.data))
+            .catch((error) =>
+                console.log("Error fetching single car data: ", error)
+            );
     }, [carId]);
+
+    const handleRent = (e) => {
+        e.preventDefault();
+        if (user) {
+            document.getElementById("my_modal_1").showModal();
+        } else {
+            navigate(`/login?redirect=/cars/${carId}`, { replace: false });
+        }
+    };
 
     return (
         <div>
@@ -88,11 +105,7 @@ const CarDetailsPage = () => {
                                     ? "bg-red-500 cursor-pointer"
                                     : "bg-red-300"
                             }`}
-                            onClick={() =>
-                                document
-                                    .getElementById("my_modal_1")
-                                    .showModal()
-                            }
+                            onClick={handleRent}
                         >
                             Rent
                         </button>

@@ -1,14 +1,20 @@
-import React, { useEffect, useState } from "react";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
 const CarsPage = () => {
     const [data, setData] = useState([]);
+    const { user } = useAuth();
 
     useEffect(() => {
         axios
-            .get("https://localhost:7056/api/Cars", { withCredentials: true })
-            .then((res) => setData(res.data));
+            .get("https://localhost:7056/api/Cars", {
+                withCredentials: true,
+                //headers: { Authorization: `Bearer ${user.token}` },
+            })
+            .then((res) => setData(res.data))
+            .catch((error) => console.log("Error fetching car data: ", error));
     }, []);
 
     return (

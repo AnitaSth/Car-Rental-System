@@ -1,7 +1,15 @@
 import { IoMenuSharp } from "react-icons/io5";
 import { Link } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
 
 const Navbar = () => {
+    const { user, dispatch } = useAuth();
+
+    const logoutHandler = () => {
+        localStorage.removeItem("user");
+        dispatch({ type: "LOGOUT" });
+    };
+
     return (
         <nav className="flex items-center justify-between px-10 py-4 bg-blue-500 text-white">
             <div>
@@ -17,9 +25,17 @@ const Navbar = () => {
                 <li>
                     <Link to="/booking">Booking</Link>
                 </li>
-                <li>
-                    <Link to="/about">About</Link>
-                </li>
+                {user ? (
+                    <li>
+                        <button to="/logout" onClick={logoutHandler}>
+                            Logout
+                        </button>
+                    </li>
+                ) : (
+                    <li>
+                        <Link to="/login">Login</Link>
+                    </li>
+                )}
             </ul>
             <div className="block lg:hidden">
                 <IoMenuSharp className="text-3xl" />

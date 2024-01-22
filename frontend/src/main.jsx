@@ -10,6 +10,9 @@ import CarDetailsPage from "./pages/CarDetailsPage.jsx";
 import "react-datetime-picker/dist/DateTimePicker.css";
 import "react-calendar/dist/Calendar.css";
 import "react-clock/dist/Clock.css";
+import LoginPage from "./pages/LoginPage.jsx";
+import RegisterPage from "./pages/RegisterPage.jsx";
+import AuthProvider from "./providers/AuthProvider";
 
 const router = createBrowserRouter([
     {
@@ -33,12 +36,22 @@ const router = createBrowserRouter([
                 path: "/about",
                 element: <AboutPage />,
             },
+            {
+                path: "/login",
+                element: <LoginPage />,
+            },
+            {
+                path: "/register",
+                element: <RegisterPage />,
+            },
         ],
     },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
     <React.StrictMode>
-        <RouterProvider router={router} />
+        <AuthProvider>
+            <RouterProvider router={router} />
+        </AuthProvider>
     </React.StrictMode>
 );
