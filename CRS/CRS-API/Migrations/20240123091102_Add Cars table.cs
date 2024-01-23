@@ -7,7 +7,7 @@
 namespace CRS_API.Migrations
 {
     /// <inheritdoc />
-    public partial class AddCarTable : Migration
+    public partial class AddCarstable : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -28,25 +28,43 @@ namespace CRS_API.Migrations
                     PassengerSeat = table.Column<int>(type: "int", nullable: false),
                     RentalPrice = table.Column<int>(type: "int", nullable: false),
                     Condition = table.Column<int>(type: "int", nullable: false),
-                    Images = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Availability = table.Column<bool>(type: "bit", nullable: false)
+                    Image = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Availability = table.Column<bool>(type: "bit", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Cars", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Cars_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
                 table: "Cars",
-                columns: new[] { "Id", "Availability", "Color", "Condition", "FuelType", "Images", "LicensePlate", "Manufacturer", "Mileage", "Model", "PassengerSeat", "RentalPrice", "TransmissionType" },
+                columns: new[] { "Id", "Availability", "Color", "Condition", "FuelType", "Image", "LicensePlate", "Manufacturer", "Mileage", "Model", "PassengerSeat", "RentalPrice", "TransmissionType", "UserId" },
                 values: new object[,]
                 {
-                    { 1, true, "Blue", 0, 0, "ImageURL1", "ABC123", "Toyota", 30000f, "Camry", 5, 2800, 0 },
-                    { 2, true, "Red", 3, 0, "ImageURL2", "XYZ789", "Honda", 25000f, "Accord", 4, 2000, 1 },
-                    { 3, true, "Silver", 1, 0, "ImageURL3", "DEF456", "Ford", 40000f, "Fusion", 5, 2500, 0 },
-                    { 4, true, "Black", 0, 0, "ImageURL4", "GHI789", "Chevrolet", 35000f, "Malibu", 4, 3000, 1 },
-                    { 5, true, "White", 1, 2, "ImageURL5", "JKL012", "Tesla", 20000f, "Model 3", 5, 4500, 0 }
+                    { 1, true, "Blue", 0, 0, "ImageURL1", "ABC123", "Toyota", 30000f, "Camry", 5, 2800, 0, 1 },
+                    { 2, true, "Red", 3, 0, "ImageURL2", "XYZ789", "Honda", 25000f, "Accord", 4, 2000, 1, 1 },
+                    { 3, true, "Silver", 1, 0, "ImageURL3", "DEF456", "Ford", 40000f, "Fusion", 5, 2500, 0, 1 },
+                    { 4, true, "Black", 0, 0, "ImageURL4", "GHI789", "Chevrolet", 35000f, "Malibu", 4, 3000, 1, 1 },
+                    { 5, true, "White", 1, 2, "ImageURL5", "JKL012", "Tesla", 20000f, "Model 3", 5, 4500, 0, 1 }
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_PhoneNumber",
+                table: "Users",
+                column: "PhoneNumber",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Cars_UserId",
+                table: "Cars",
+                column: "UserId");
         }
 
         /// <inheritdoc />
@@ -54,6 +72,10 @@ namespace CRS_API.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Cars");
+
+            migrationBuilder.DropIndex(
+                name: "IX_Users_PhoneNumber",
+                table: "Users");
         }
     }
 }

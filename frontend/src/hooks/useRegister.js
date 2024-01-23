@@ -5,13 +5,14 @@ export const useRegister = () => {
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(null);
 
-    const register = async (phoneNumber, password, role) => {
+    const register = async (phoneNumber, fullName, password, role) => {
         setIsLoading(true);
         setError(null);
 
         try {
             const user = {
                 phoneNumber,
+                fullName,
                 password,
                 role,
             };

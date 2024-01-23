@@ -15,6 +15,7 @@ namespace CRS_API.Models.Domain
 		[MinLength(10, ErrorMessage = "Phone number must be 10 digits")]
 		public string PhoneNumber { get; set; } = string.Empty;
 		public string PasswordHash { get; set; } = string.Empty;
+		public string FullName { get; set; } = string.Empty;
 		public UserRole Role { get; set; } 
 	}
 }

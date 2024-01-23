@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { useLogin } from "../hooks/useLogin";
 
@@ -25,37 +25,58 @@ const LoginPage = () => {
     const loginHandler = async (e) => {
         e.preventDefault();
         try {
-            const user = await login(phoneNumber, password);
-            navigate(redirect);
+            await login(phoneNumber, password);
+            if (user) {
+                navigate(redirect);
+            }
         } catch (err) {
             console.log(err);
         }
     };
 
     return (
-        <div className="max-w-sm mx-auto my-20">
-            <h1 className="my-5 text-3xl font-semibold">Login</h1>
-            <form
-                className="flex flex-col gap-y-2 items-center"
-                onSubmit={loginHandler}
-            >
-                <input
-                    type="text"
-                    placeholder="Enter phone number"
-                    className="input input-bordered w-full"
-                    onChange={(e) => setPhoneNumber(e.target.value)}
-                />
-                <input
-                    type="password"
-                    placeholder="Enter password"
-                    className="input input-bordered w-full"
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-
-                <button type="submit" className="btn btn-neutral w-32">
+        <div
+            id="auth-container"
+            className="w-full h-lvh flex flex-col justify-center"
+        >
+            <div className="max-w-sm mx-auto bg-white p-16 rounded-lg">
+                <h1 className="text-2xl text-center font-semibold uppercase">
                     Login
-                </button>
-            </form>
+                </h1>
+                <form
+                    className="flex flex-col gap-y-3 items-center mt-5"
+                    onSubmit={loginHandler}
+                >
+                    <input
+                        type="text"
+                        placeholder="Enter phone number"
+                        className="input input-bordered w-full"
+                        onChange={(e) => setPhoneNumber(e.target.value)}
+                    />
+                    <input
+                        type="password"
+                        placeholder="Enter password"
+                        className="input input-bordered w-full"
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+
+                    <button
+                        type="submit"
+                        className="btn btn-neutral w-28 mt-1 btn-sm"
+                    >
+                        Login
+                    </button>
+                </form>
+                <p className="mt-10">
+                    Don't have an account?{" "}
+                    <Link
+                        to="/register"
+                        className="text-gray-800 font-semibold hover:text-gray-500"
+                    >
+                        Register
+                    </Link>
+                </p>
+            </div>
         </div>
     );
 };

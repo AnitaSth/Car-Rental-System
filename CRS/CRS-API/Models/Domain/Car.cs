@@ -18,5 +18,8 @@ namespace CRS_API.Models.Domain
 		public Condition Condition { get; set; }
 		public string Image { get; set; }
 		public bool Availability { get; set; } = true;
+		public int UserId { get; set; }
+
+		public User User { get; set; }
 	}
 }

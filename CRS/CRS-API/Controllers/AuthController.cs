@@ -26,12 +26,20 @@ namespace CRS_API.Controllers
 		{
 			string passwordHash = BCrypt.Net.BCrypt.HashPassword(user.Password);
 
+			var exists = _db.Users.FirstOrDefault(x => x.PhoneNumber == user.PhoneNumber);
+
+			if (exists != null)
+			{
+				return BadRequest("This user already exists.");
+			}
+
 			if (user.IsValidRole())
 			{
 				User newUser = new User
 				{
 					PhoneNumber = user.PhoneNumber,
 					PasswordHash = passwordHash,
+					FullName = user.FullName,
 					Role = (UserRole)Enum.Parse(typeof(UserRole), user.Role)
 				};
 
@@ -42,13 +50,13 @@ namespace CRS_API.Controllers
 				{
 					Id = newUser.Id,
 					PhoneNumber = newUser.PhoneNumber,
+					FullName = newUser.FullName,
 					Role = user.Role,
 				};
 
 				return Ok(userDto);
 			}
-
-			return BadRequest("Invalid role");
+            return BadRequest("Invalid role");
 		}
 
 		[HttpPost("login")]
@@ -67,6 +75,7 @@ namespace CRS_API.Controllers
 			{
 				Id = user.Id,
 				PhoneNumber = user.PhoneNumber,
+				FullName = user.FullName,
 				Role = user.Role.ToString(),
 				Token = token
 			};

@@ -1,13 +1,16 @@
 import { IoMenuSharp } from "react-icons/io5";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 
 const Navbar = () => {
     const { user, dispatch } = useAuth();
 
+    const navigate = useNavigate();
+
     const logoutHandler = () => {
         localStorage.removeItem("user");
         dispatch({ type: "LOGOUT" });
+        navigate("/login");
     };
 
     return (

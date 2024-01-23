@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CRS_API.Migrations
 {
     [DbContext(typeof(CRSDbContext))]
-    [Migration("20240121083933_Change images to image")]
-    partial class Changeimagestoimage
+    [Migration("20240123091102_Add Cars table")]
+    partial class AddCarstable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -73,7 +73,12 @@ namespace CRS_API.Migrations
                     b.Property<int>("TransmissionType")
                         .HasColumnType("int");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Cars");
 
@@ -92,7 +97,8 @@ namespace CRS_API.Migrations
                             Model = "Camry",
                             PassengerSeat = 5,
                             RentalPrice = 2800,
-                            TransmissionType = 0
+                            TransmissionType = 0,
+                            UserId = 1
                         },
                         new
                         {
@@ -108,7 +114,8 @@ namespace CRS_API.Migrations
                             Model = "Accord",
                             PassengerSeat = 4,
                             RentalPrice = 2000,
-                            TransmissionType = 1
+                            TransmissionType = 1,
+                            UserId = 1
                         },
                         new
                         {
@@ -124,7 +131,8 @@ namespace CRS_API.Migrations
                             Model = "Fusion",
                             PassengerSeat = 5,
                             RentalPrice = 2500,
-                            TransmissionType = 0
+                            TransmissionType = 0,
+                            UserId = 1
                         },
                         new
                         {
@@ -140,7 +148,8 @@ namespace CRS_API.Migrations
                             Model = "Malibu",
                             PassengerSeat = 4,
                             RentalPrice = 3000,
-                            TransmissionType = 1
+                            TransmissionType = 1,
+                            UserId = 1
                         },
                         new
                         {
@@ -156,8 +165,52 @@ namespace CRS_API.Migrations
                             Model = "Model 3",
                             PassengerSeat = 5,
                             RentalPrice = 4500,
-                            TransmissionType = 0
+                            TransmissionType = 0,
+                            UserId = 1
                         });
+                });
+
+            modelBuilder.Entity("CRS_API.Models.Domain.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PhoneNumber")
+                        .IsUnique();
+
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("CRS_API.Models.Domain.Car", b =>
+                {
+                    b.HasOne("CRS_API.Models.Domain.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }

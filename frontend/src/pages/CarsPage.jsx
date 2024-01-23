@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
+import { MdAddCircle } from "react-icons/md";
 
 const CarsPage = () => {
     const [data, setData] = useState([]);
@@ -18,7 +19,15 @@ const CarsPage = () => {
     }, []);
 
     return (
-        <div className="container mx-auto max-w-7xl my-5">
+        <div className="container mx-auto max-w-7xl my-5 flex flex-col">
+            {user &&
+                (user.role === "Admin" || user.role === "VehicleOwner") && (
+                    <button className="btn btn-outline btn-success w-44 self-end mr-8">
+                        <MdAddCircle />
+                        Add Car
+                    </button>
+                )}
+
             <div className="grid grid-cols-3 justify-items-center">
                 {data.map((car) => (
                     <div
@@ -33,17 +42,25 @@ const CarsPage = () => {
                                 <h2 className="card-title text-2xl">
                                     {car.manufacturer} {car.model}
                                 </h2>
-                                <p
-                                    className={
-                                        car.availability
-                                            ? "badge badge-success text-white font-semibold py-3 px-5"
-                                            : "badge badge-error text-white font-semibold py-3 px-5"
-                                    }
-                                >
-                                    {car.availability
-                                        ? "Available"
-                                        : "Unavailable"}
-                                </p>
+                                <div className="flex gap-x-5">
+                                    <span
+                                        className={
+                                            car.availability
+                                                ? "badge badge-success text-white font-semibold py-3 px-5"
+                                                : "badge badge-error text-white font-semibold py-3 px-5"
+                                        }
+                                    >
+                                        {car.availability
+                                            ? "Available"
+                                            : "Unavailable"}
+                                    </span>
+
+                                    {car.user.role === "VehicleOwner" && (
+                                        <span className="badge badge-warning text-white font-semibold py-3 px-5">
+                                            Third party
+                                        </span>
+                                    )}
+                                </div>
                             </div>
 
                             <div className="card-actions justify-end">

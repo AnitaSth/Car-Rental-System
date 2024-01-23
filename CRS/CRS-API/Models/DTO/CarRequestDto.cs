@@ -1,11 +1,9 @@
-﻿using CRS_API.Enums;
-using CRS_API.Models.Domain;
+﻿using CRS_API.Models.Domain;
 
 namespace CRS_API.Models.DTO
 {
-	public class CarDto
+	public class CarRequestDto
 	{
-		public int Id { get; set; }
 		public string Manufacturer { get; set; } = string.Empty;
 		public string Model { get; set; } = string.Empty;
 		public string LicensePlate { get; set; } = string.Empty;
@@ -18,6 +16,8 @@ namespace CRS_API.Models.DTO
 		public string Condition { get; set; } = string.Empty;
 		public string Image { get; set; } = string.Empty;
 		public bool Availability { get; set; } = true;
-		public UserDto User { get; set; }
-	}
+
+		public int UserId { get; set; }	
+
+	}	
 }

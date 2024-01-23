@@ -55,6 +55,15 @@ const CarDetailsPage = () => {
                         </div>
 
                         <ul className="mt-5 text-lg font-semibold flex flex-col gap-y-2">
+                            {user && user.role === "Admin" && (
+                                <li>
+                                    License Plate No:{" "}
+                                    <span className="font-bold">
+                                        {car.licensePlate}
+                                    </span>
+                                </li>
+                            )}
+
                             <li>
                                 Color:{" "}
                                 <span className="font-bold">{car.color}</span>
