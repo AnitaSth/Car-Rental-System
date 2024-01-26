@@ -5,7 +5,7 @@ namespace CRS_API.Models.Domain
 {
 	public class Car
 	{
-		public int Id { get; set; } 
+		public Guid Id { get; set; }
 		public string Manufacturer { get; set; } = string.Empty;
 		public string Model { get; set; } = string.Empty;
 		public string LicensePlate { get; set; } = string.Empty;
@@ -18,7 +18,7 @@ namespace CRS_API.Models.Domain
 		public Condition Condition { get; set; }
 		public string Image { get; set; }
 		public bool Availability { get; set; } = true;
-		public int UserId { get; set; }
+		public Guid UserId { get; set; }
 
 		public User User { get; set; }
 	}

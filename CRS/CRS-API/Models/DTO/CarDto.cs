@@ -5,7 +5,7 @@ namespace CRS_API.Models.DTO
 {
 	public class CarDto
 	{
-		public int Id { get; set; }
+		public Guid Id { get; set; }
 		public string Manufacturer { get; set; } = string.Empty;
 		public string Model { get; set; } = string.Empty;
 		public string LicensePlate { get; set; } = string.Empty;

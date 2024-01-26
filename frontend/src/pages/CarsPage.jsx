@@ -5,11 +5,16 @@ import ErrorMessage from "../components/ErrorMessage";
 import Loader from "../components/Loader";
 import { useAuth } from "../hooks/useAuth";
 import carService from "../services/carService";
+import Modal from "../components/Modal";
+import { toast } from "react-toastify";
 
 const CarsPage = () => {
     const [cars, setCars] = useState([]);
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+
+    const [edit, setEdit] = useState(false);
+    const [carId, setCarId] = useState("");
 
     const { user } = useAuth();
 
@@ -27,11 +32,28 @@ const CarsPage = () => {
             });
     }, []);
 
+    const deleteCarHandler = async (carId) => {
+        try {
+            const response = await carService.deleteCar(carId, user.token);
+            if (response) {
+                toast(`Car of Id ${carId} is deleted.`, { type: "success" });
+            }
+        } catch (error) {
+            toast("An error occured", { type: "error" });
+        }
+    };
+
     return (
         <div className="container mx-auto max-w-7xl my-5 flex flex-col">
             {user &&
                 (user.role === "Admin" || user.role === "VehicleOwner") && (
-                    <button className="btn btn-outline btn-success w-44 self-end mr-8">
+                    <button
+                        className="btn btn-outline btn-success w-44 self-end mr-8"
+                        onClick={() => {
+                            document.getElementById("my_modal_3").showModal();
+                            setEdit(false);
+                        }}
+                    >
                         <MdAddCircle />
                         Add Car
                     </button>
@@ -82,8 +104,43 @@ const CarsPage = () => {
                                     >
                                         More Details
                                     </Link>
+                                    {(user.role === "Admin" ||
+                                        user.id === car.user.id) && (
+                                        <button
+                                            className="btn btn-error text-white"
+                                            onClick={() => {
+                                                const confirm = window.confirm(
+                                                    "Are you sure you want to delete?"
+                                                );
+
+                                                if (confirm) {
+                                                    deleteCarHandler(car.id);
+                                                }
+                                            }}
+                                        >
+                                            Delete
+                                        </button>
+                                    )}
+
+                                    {user.id === car.user.id && (
+                                        <button
+                                            className="btn btn-accent text-white"
+                                            onClick={() => {
+                                                document
+                                                    .getElementById(
+                                                        "my_modal_3"
+                                                    )
+                                                    .showModal();
+                                                setEdit(true);
+                                                setCarId(car.id);
+                                            }}
+                                        >
+                                            Update
+                                        </button>
+                                    )}
                                 </div>
                             </div>
+                            <Modal edit={edit} carId={carId} />
                         </div>
                     ))}
                 </div>

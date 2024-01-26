@@ -3,6 +3,8 @@ import { Outlet, useNavigate } from "react-router-dom";
 import Footer from "./components/layouts/Footer";
 import Navbar from "./components/layouts/Navbar";
 import { useAuth } from "./hooks/useAuth";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
     const { user } = useAuth();
@@ -17,6 +19,7 @@ function App() {
             <Navbar />
             <main>
                 <Outlet />
+                <ToastContainer />
             </main>
             <Footer />
         </>

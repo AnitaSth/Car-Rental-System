@@ -145,9 +145,9 @@ namespace CRS_API.Controllers
 
 
 		// Get car by Id
-		[HttpGet("{id:int}")]
+		[HttpGet("{id:Guid}")]
 		//[Authorize(Roles = "Admin, Customer, VehicleOwner")]
-		public ActionResult<CarDto> GetById(int id)
+		public ActionResult<CarDto> GetById(Guid id)
 		{
 			Car? car = _db.Cars.Include("User").FirstOrDefault(car => car.Id == id);
 
@@ -238,9 +238,9 @@ namespace CRS_API.Controllers
 		}
 
 
-		[HttpDelete("{id:int}")]
+		[HttpDelete("{id:Guid}")]
 		[Authorize(Roles = "Admin, VehicleOwner")]
-		public IActionResult Delete(int id)
+		public IActionResult Delete(Guid id)
 		{
 			Car car = _db.Cars.FirstOrDefault(x => x.Id == id);
 
@@ -254,9 +254,9 @@ namespace CRS_API.Controllers
 			return NoContent();	
 		}
 
-		[HttpPut("{id:int}")]
+		[HttpPut("{id:Guid}")]
 		[Authorize(Roles = "Admin, VehicleOwner")]
-		public ActionResult<CarDto> Update(int id, [FromBody] CarRequestDto carRequestDto) 
+		public ActionResult<CarDto> Update(Guid id, [FromBody] CarRequestDto carRequestDto) 
 		{
 			Car car = _db.Cars.FirstOrDefault(x => x.Id == id);
 
@@ -281,7 +281,7 @@ namespace CRS_API.Controllers
 
 			_db.SaveChanges();
 
-			car = _db.Cars.Include("User").FirstOrDefault(c => c.Id == car.Id);
+			car = _db.Cars.Include("User").FirstOrDefault(c => c.Id == car.Id)!;
 
 
 			CarDto carDto = new CarDto

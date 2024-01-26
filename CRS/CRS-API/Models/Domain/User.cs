@@ -7,9 +7,7 @@ namespace CRS_API.Models.Domain
 {
 	public class User
 	{
-		[Key]
-		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-		public int Id { get; set; }
+		public Guid Id { get; set; }
 
 		[MaxLength(10, ErrorMessage = "Phone number must be 10 digits")]
 		[MinLength(10, ErrorMessage = "Phone number must be 10 digits")]

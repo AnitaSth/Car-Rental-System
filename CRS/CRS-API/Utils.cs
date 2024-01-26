@@ -20,7 +20,7 @@ namespace CRS_API
 
 			var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-			var token = new JwtSecurityToken(configuration["Jwt:Issuer"], configuration["Jwt:Audience"], claims: claims, expires: DateTime.Now.AddSeconds(15), signingCredentials: cred);
+			var token = new JwtSecurityToken(configuration["Jwt:Issuer"], configuration["Jwt:Audience"], claims: claims, expires: DateTime.Now.AddMinutes(30), signingCredentials: cred);
 
 			var jwt = new JwtSecurityTokenHandler().WriteToken(token);
 

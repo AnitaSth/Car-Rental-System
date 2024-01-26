@@ -1,6 +1,6 @@
-import React from "react";
 import heroImg from "../assets/hero-img.jpeg";
 import { Link } from "react-router-dom";
+
 const HomePage = () => {
     return (
         <div

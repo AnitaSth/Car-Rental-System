@@ -17,7 +17,7 @@ namespace CRS_API.Models.DTO
 		public string Image { get; set; } = string.Empty;
 		public bool Availability { get; set; } = true;
 
-		public int UserId { get; set; }	
+		public Guid UserId { get; set; }	
 
 	}	
 }

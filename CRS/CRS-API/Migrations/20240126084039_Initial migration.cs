@@ -1,23 +1,36 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
-
-#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
 namespace CRS_API.Migrations
 {
     /// <inheritdoc />
-    public partial class AddCarstable : Migration
+    public partial class Initialmigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Role = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Cars",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Manufacturer = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Model = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LicensePlate = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -30,7 +43,7 @@ namespace CRS_API.Migrations
                     Condition = table.Column<int>(type: "int", nullable: false),
                     Image = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Availability = table.Column<bool>(type: "bit", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false)
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -42,24 +55,6 @@ namespace CRS_API.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.InsertData(
-                table: "Cars",
-                columns: new[] { "Id", "Availability", "Color", "Condition", "FuelType", "Image", "LicensePlate", "Manufacturer", "Mileage", "Model", "PassengerSeat", "RentalPrice", "TransmissionType", "UserId" },
-                values: new object[,]
-                {
-                    { 1, true, "Blue", 0, 0, "ImageURL1", "ABC123", "Toyota", 30000f, "Camry", 5, 2800, 0, 1 },
-                    { 2, true, "Red", 3, 0, "ImageURL2", "XYZ789", "Honda", 25000f, "Accord", 4, 2000, 1, 1 },
-                    { 3, true, "Silver", 1, 0, "ImageURL3", "DEF456", "Ford", 40000f, "Fusion", 5, 2500, 0, 1 },
-                    { 4, true, "Black", 0, 0, "ImageURL4", "GHI789", "Chevrolet", 35000f, "Malibu", 4, 3000, 1, 1 },
-                    { 5, true, "White", 1, 2, "ImageURL5", "JKL012", "Tesla", 20000f, "Model 3", 5, 4500, 0, 1 }
-                });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Users_PhoneNumber",
-                table: "Users",
-                column: "PhoneNumber",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Cars_UserId",
@@ -73,9 +68,8 @@ namespace CRS_API.Migrations
             migrationBuilder.DropTable(
                 name: "Cars");
 
-            migrationBuilder.DropIndex(
-                name: "IX_Users_PhoneNumber",
-                table: "Users");
+            migrationBuilder.DropTable(
+                name: "Users");
         }
     }
 }
