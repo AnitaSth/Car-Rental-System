@@ -26,8 +26,13 @@ const Navbar = () => {
                     <Link to="/cars">Cars</Link>
                 </li>
                 <li>
-                    <Link to="/booking">Booking</Link>
+                    <Link to="/rentals">Rentals</Link>
                 </li>
+                {user?.role === "Admin" && (
+                    <li>
+                        <Link to="/admin">Admin</Link>
+                    </li>
+                )}
                 {user ? (
                     <li>
                         <button to="/logout" onClick={logoutHandler}>

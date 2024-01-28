@@ -15,6 +15,13 @@ namespace CRS_API.DB
 
 		public DbSet<Car> Cars { get; set; }
 
+		public DbSet<Rental> Rentals { get; set; }
+
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
+		{
+			modelBuilder.Entity<Rental>().HasOne(e => e.User).WithMany(e => e.Rentals).HasForeignKey(e => e.UserId).IsRequired().OnDelete(DeleteBehavior.Restrict);
+		}
+
 		/*protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			base.OnModelCreating(modelBuilder);
