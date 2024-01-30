@@ -24,6 +24,7 @@ const AdminRentals = () => {
                         setIsLoading(false);
                     })
                     .catch((error) => {
+                        console.log(error);
                         setError(error.message);
                         setIsLoading(false);
                     });
@@ -42,7 +43,7 @@ const AdminRentals = () => {
             ) : error ? (
                 <ErrorMessage>{error}</ErrorMessage>
             ) : (
-                <div className="overflow-x-auto">
+                <div className="overflow-x-auto bg-white p-5 rounded-lg">
                     <h1 className="text-center mb-5 text-2xl font-semibold uppercase">
                         Rentals
                     </h1>

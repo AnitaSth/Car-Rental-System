@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useRegister } from "../hooks/useRegister";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
+import { toast } from "react-toastify";
 
 const RegisterPage = () => {
     const [phoneNumber, setPhoneNumber] = useState("");
@@ -40,7 +41,7 @@ const RegisterPage = () => {
             setRole("Customer");
             navigate("/login");
         } else {
-            console.log("Passwords do not match");
+            toast.error("Passwords do not match", { autoClose: 1000 });
         }
     };
 

@@ -1,13 +1,28 @@
 import { useEffect, useState } from "react";
-import carService from "../services/carService";
 import { useAuth } from "../hooks/useAuth";
-import { toast } from "react-toastify";
+import carService from "../services/carService";
 import ErrorMessage from "./ErrorMessage";
 
-const Modal = ({ edit, carId }) => {
+const Modal = ({ edit, carId, setCars }) => {
     const fuelTypes = ["Petrol", "Diesel", "Electric"];
     const transmissionTypes = ["Automatic", "Manual"];
     const conditions = ["Excellent", "Good", "Average", "Bad"];
+
+    const [manufacturer, setManuFacturer] = useState("");
+    const [model, setModel] = useState("");
+    const [licensePlate, setLicensePlate] = useState("");
+    const [color, setColor] = useState("");
+    const [fuelType, setFuelType] = useState("Petrol");
+    const [transmissionType, setTransmissionType] = useState("Manual");
+    const [mileage, setMileage] = useState(0);
+    const [passengerSeat, setPassengerSeat] = useState(0);
+    const [condition, setCondition] = useState("Excellent");
+    const [image, setImage] = useState("");
+    const [rentalPrice, setRentalPrice] = useState(0);
+
+    const [error, setError] = useState("");
+
+    const { user } = useAuth();
 
     useEffect(() => {
         if (edit) {
@@ -34,22 +49,6 @@ const Modal = ({ edit, carId }) => {
             clearInput();
         }
     }, [edit, carId]);
-
-    const [manufacturer, setManuFacturer] = useState("");
-    const [model, setModel] = useState("");
-    const [licensePlate, setLicensePlate] = useState("");
-    const [color, setColor] = useState("");
-    const [fuelType, setFuelType] = useState("Petrol");
-    const [transmissionType, setTransmissionType] = useState("Manual");
-    const [mileage, setMileage] = useState(0);
-    const [passengerSeat, setPassengerSeat] = useState(0);
-    const [condition, setCondition] = useState("Excellent");
-    const [image, setImage] = useState("");
-    const [rentalPrice, setRentalPrice] = useState(0);
-
-    const [error, setError] = useState("");
-
-    const { user } = useAuth();
 
     const clearInput = () => {
         setError("");
@@ -87,7 +86,13 @@ const Modal = ({ edit, carId }) => {
         try {
             const response = await carService.addCar(newCar, user.token);
             if (response.data) {
-                document.getElementById("my_modal_3").close();
+                const { data: updatedCars } = await carService.getAllCars();
+
+                if (updatedCars) {
+                    setCars(updatedCars);
+                }
+
+                document.getElementById("car_modal").close();
                 clearInput();
             }
         } catch (error) {
@@ -116,7 +121,13 @@ const Modal = ({ edit, carId }) => {
         try {
             const response = await carService.updateCar(carId, car, user.token);
             if (response.data) {
-                document.getElementById("my_modal_3").close();
+                const { data: updatedCars } = await carService.getAllCars();
+
+                if (updatedCars) {
+                    setCars(updatedCars);
+                }
+
+                document.getElementById("car_modal").close();
                 clearInput();
             }
         } catch (error) {
@@ -125,7 +136,7 @@ const Modal = ({ edit, carId }) => {
     };
 
     return (
-        <dialog id="my_modal_3" className="modal">
+        <dialog id="car_modal" className="modal">
             <div className="modal-box">
                 <form method="dialog">
                     <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">

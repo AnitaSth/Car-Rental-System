@@ -29,7 +29,6 @@ export const useLogin = () => {
             dispatch({ type: "LOGIN", payload: response.data });
 
             setIsLoading(false);
-            console.log(first);
             return user;
         } catch (error) {
             setError(error.response?.data || "An error occurred");

@@ -1,17 +1,11 @@
 import { IoMenuSharp } from "react-icons/io5";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
+import { useLogout } from "../../hooks/useLogout";
 
 const Navbar = () => {
     const { user, dispatch } = useAuth();
-
-    const navigate = useNavigate();
-
-    const logoutHandler = () => {
-        localStorage.removeItem("user");
-        dispatch({ type: "LOGOUT" });
-        navigate("/login");
-    };
+    const { logout } = useLogout();
 
     return (
         <nav className="flex items-center justify-between px-10 py-4 bg-blue-500 text-white">
@@ -35,7 +29,7 @@ const Navbar = () => {
                 )}
                 {user ? (
                     <li>
-                        <button to="/logout" onClick={logoutHandler}>
+                        <button to="/logout" onClick={logout}>
                             Logout
                         </button>
                     </li>

@@ -5,12 +5,18 @@ import ErrorMessage from "./ErrorMessage";
 import Loader from "./Loader";
 import { useNavigate } from "react-router-dom";
 import carService from "../services/carService";
+import { MdAddCircle } from "react-icons/md";
+import Modal from "./Modal";
+import { toast } from "react-toastify";
 
 const AdminCars = () => {
     const { user } = useAuth();
     const [cars, setCars] = useState([]);
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+
+    const [edit, setEdit] = useState(false);
+    const [carId, setCarId] = useState("");
 
     const navigate = useNavigate();
 
@@ -36,6 +42,26 @@ const AdminCars = () => {
         }
     }, [user, navigate]);
 
+    const deleteCarHandler = async (carId) => {
+        const confirm = window.confirm("Are you sure you want to delete?");
+
+        if (confirm) {
+            try {
+                const response = await carService.deleteCar(carId, user.token);
+                if (response) {
+                    setCars((prev) => prev.filter((car) => car.id !== carId));
+
+                    toast(`Car of Id ${carId} is deleted.`, {
+                        type: "success",
+                        autoClose: 1000,
+                    });
+                }
+            } catch (error) {
+                toast("An error occured", { type: "error" });
+            }
+        }
+    };
+
     return (
         <div>
             {isLoading ? (
@@ -43,7 +69,17 @@ const AdminCars = () => {
             ) : error ? (
                 <ErrorMessage>{error}</ErrorMessage>
             ) : (
-                <div className="overflow-x-auto">
+                <div className="overflow-x-auto bg-white p-5 rounded-lg flex flex-col">
+                    <button
+                        className="btn btn-outline btn-success w-44 self-end mr-8"
+                        onClick={() => {
+                            document.getElementById("car_modal").showModal();
+                            setEdit(false);
+                        }}
+                    >
+                        <MdAddCircle />
+                        Add Car
+                    </button>
                     <h1 className="text-center mb-5 text-2xl font-semibold uppercase">
                         Cars
                     </h1>
@@ -69,10 +105,24 @@ const AdminCars = () => {
                                     <td>{car.color}</td>
                                     <td>Rs. {car.rentalPrice}</td>
                                     <td className="flex gap-x-2 justify-center">
-                                        <button className="btn btn-success btn-sm text-white">
+                                        <button
+                                            className="btn btn-success btn-sm text-white"
+                                            onClick={() => {
+                                                document
+                                                    .getElementById("car_modal")
+                                                    .showModal();
+                                                setEdit(true);
+                                                setCarId(car.id);
+                                            }}
+                                        >
                                             Update
                                         </button>
-                                        <button className="btn btn-error btn-sm text-white">
+                                        <button
+                                            className="btn btn-error btn-sm text-white"
+                                            onClick={() =>
+                                                deleteCarHandler(car.id)
+                                            }
+                                        >
                                             Delete
                                         </button>
                                     </td>
@@ -80,6 +130,7 @@ const AdminCars = () => {
                             ))}
                         </tbody>
                     </table>
+                    <Modal edit={edit} carId={carId} setCars={setCars} />
                 </div>
             )}
         </div>

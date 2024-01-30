@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { useLogin } from "../hooks/useLogin";
+import { toast } from "react-toastify";
 
 const LoginPage = () => {
     const [phoneNumber, setPhoneNumber] = useState("");
@@ -24,13 +25,11 @@ const LoginPage = () => {
 
     const loginHandler = async (e) => {
         e.preventDefault();
-        try {
-            await login(phoneNumber, password);
-            if (user) {
-                navigate(redirect);
-            }
-        } catch (err) {
-            console.log(err);
+        const response = await login(phoneNumber, password);
+        if (user) {
+            navigate(redirect);
+        } else {
+            toast.error(error, { autoClose: 1000 });
         }
     };
 
