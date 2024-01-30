@@ -10,11 +10,6 @@ const CarsPage = () => {
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
-    const [edit, setEdit] = useState(false);
-    const [carId, setCarId] = useState("");
-
-    const { user } = useAuth();
-
     useEffect(() => {
         setIsLoading(true);
         carService

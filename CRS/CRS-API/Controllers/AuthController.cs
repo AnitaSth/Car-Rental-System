@@ -2,6 +2,7 @@
 using CRS_API.Enums;
 using CRS_API.Models.Domain;
 using CRS_API.Models.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;

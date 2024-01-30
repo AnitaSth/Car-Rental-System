@@ -73,7 +73,7 @@ namespace CRS_API.Controllers
 			
 
 		[HttpPost]
-		//[Authorize(Roles = "Admin, VehicleOwner, Customer")]
+		[Authorize(Roles = "Admin, VehicleOwner, Customer")]
 		public ActionResult<RentalDto> Create([FromBody] RentalRequestDto rentalRequestDto)
 		{
 			Rental rental = new Rental

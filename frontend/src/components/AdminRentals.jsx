@@ -24,7 +24,6 @@ const AdminRentals = () => {
                         setIsLoading(false);
                     })
                     .catch((error) => {
-                        console.log(error);
                         setError(error.message);
                         setIsLoading(false);
                     });
@@ -52,10 +51,10 @@ const AdminRentals = () => {
                             <tr>
                                 <th></th>
                                 <th>Car</th>
+                                <th>User</th>
                                 <th>Start Date</th>
                                 <th>End Date</th>
                                 <th>Total Cost</th>
-                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -66,17 +65,10 @@ const AdminRentals = () => {
                                         {rental.car.manufacturer} -{" "}
                                         {rental.car.model}
                                     </td>
+                                    <td>{rental.user.phoneNumber}</td>
                                     <td>{rental.startDate}</td>
                                     <td>{rental.endDate}</td>
                                     <td>{rental.totalCost}</td>
-                                    <td className="flex gap-x-2 justify-center">
-                                        <button className="btn btn-success btn-sm text-white">
-                                            Update
-                                        </button>
-                                        <button className="btn btn-error btn-sm text-white">
-                                            Delete
-                                        </button>
-                                    </td>
                                 </tr>
                             ))}
                         </tbody>
