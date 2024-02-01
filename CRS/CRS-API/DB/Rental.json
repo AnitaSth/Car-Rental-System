@@ -1,0 +1,18 @@
+[
+    {
+        "id": "a3cf9150-635f-4697-15e0-08dc231d7df6",
+        "userId": "6ce9cde7-9b99-4d51-6aea-08dc231aff8a",
+        "carId": "906025d9-42cf-4cb6-f298-08dc231bd32e",
+        "startDate": "2024-02-01T11:59:05.194",
+        "endDate": "2024-03-01T11:59:05.194",
+        "totalCost": 2800,
+    },
+    {
+        "id": "f70aeb78-8ff5-4068-15e1-08dc231d7df6",
+        "userId": "0b116059-a374-4dea-6aeb-08dc231aff8a",
+        "carId": "3a6a3f2a-8aff-452f-f29a-08dc231bd32e",
+        "startDate": "2024-01-21T11:59:05.194",
+        "endDate": "2024-01-23T11:59:05.194",
+        "totalCost": 5000,
+    }
+]

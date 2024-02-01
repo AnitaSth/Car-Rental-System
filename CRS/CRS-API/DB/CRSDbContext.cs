@@ -17,9 +17,15 @@ namespace CRS_API.DB
 
 		public DbSet<Rental> Rentals { get; set; }
 
+		public DbSet<Feedback> Feedbacks { get; set; }
+
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			modelBuilder.Entity<Rental>().HasOne(e => e.User).WithMany(e => e.Rentals).HasForeignKey(e => e.UserId).IsRequired().OnDelete(DeleteBehavior.Restrict);
+
+			modelBuilder.Entity<Feedback>().HasOne(e => e.User).WithMany(e => e.Feedbacks).HasForeignKey(e => e.UserId).IsRequired().OnDelete(DeleteBehavior.Restrict);
+
+			modelBuilder.Entity<Feedback>().HasOne(e => e.Car).WithMany(e => e.Feedbacks).HasForeignKey(e => e.CarId).IsRequired().OnDelete(DeleteBehavior.Restrict);
 		}
 
 		/*protected override void OnModelCreating(ModelBuilder modelBuilder)

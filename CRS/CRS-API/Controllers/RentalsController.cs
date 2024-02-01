@@ -27,7 +27,7 @@ namespace CRS_API.Controllers
 		public ActionResult<List<RentalDto>> Get(Guid id)
 		{
 			var rentals = new List<Rental>();
-		
+
 			bool isAdmin = _db.Users.Any(u => u.Id == id && u.Role == UserRole.Admin);
 
 			if (isAdmin)
@@ -70,7 +70,7 @@ namespace CRS_API.Controllers
 			return Ok(rentalsDto);
 
 		}
-			
+
 
 		[HttpPost]
 		[Authorize(Roles = "Admin, VehicleOwner, Customer")]

@@ -21,5 +21,7 @@ namespace CRS_API.Models.Domain
 		public Guid UserId { get; set; }
 
 		public User User { get; set; }
+
+		public ICollection<Feedback> Feedbacks { get; } = new List<Feedback>();
 	}
 }

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CRS_API.Migrations
 {
     [DbContext(typeof(CRSDbContext))]
-    [Migration("20240128052254_Change phonenumber annotation")]
-    partial class Changephonenumberannotation
+    [Migration("20240201111432_Initial migration")]
+    partial class Initialmigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -82,36 +82,6 @@ namespace CRS_API.Migrations
                     b.ToTable("Cars");
                 });
 
-            modelBuilder.Entity("CRS_API.Models.Domain.Rental", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CarId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("TotalCost")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CarId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Rentals");
-                });
-
             modelBuilder.Entity("CRS_API.Models.Domain.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -147,30 +117,6 @@ namespace CRS_API.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("CRS_API.Models.Domain.Rental", b =>
-                {
-                    b.HasOne("CRS_API.Models.Domain.Car", "Car")
-                        .WithMany()
-                        .HasForeignKey("CarId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CRS_API.Models.Domain.User", "User")
-                        .WithMany("Rentals")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Car");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("CRS_API.Models.Domain.User", b =>
-                {
-                    b.Navigation("Rentals");
                 });
 #pragma warning restore 612, 618
         }

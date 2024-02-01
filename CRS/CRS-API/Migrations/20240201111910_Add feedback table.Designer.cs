@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CRS_API.Migrations
 {
     [DbContext(typeof(CRSDbContext))]
-    [Migration("20240128043809_Add rental table")]
-    partial class Addrentaltable
+    [Migration("20240201111910_Add feedback table")]
+    partial class Addfeedbacktable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -82,6 +82,34 @@ namespace CRS_API.Migrations
                     b.ToTable("Cars");
                 });
 
+            modelBuilder.Entity("CRS_API.Models.Domain.Feedback", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CarId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<float>("Rating")
+                        .HasColumnType("real");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CarId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Feedbacks");
+                });
+
             modelBuilder.Entity("CRS_API.Models.Domain.Rental", b =>
                 {
                     b.Property<Guid>("Id")
@@ -128,8 +156,7 @@ namespace CRS_API.Migrations
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Role")
                         .HasColumnType("int");
@@ -146,6 +173,25 @@ namespace CRS_API.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CRS_API.Models.Domain.Feedback", b =>
+                {
+                    b.HasOne("CRS_API.Models.Domain.Car", "Car")
+                        .WithMany("Feedbacks")
+                        .HasForeignKey("CarId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CRS_API.Models.Domain.User", "User")
+                        .WithMany("Feedbacks")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Car");
 
                     b.Navigation("User");
                 });
@@ -169,8 +215,15 @@ namespace CRS_API.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("CRS_API.Models.Domain.Car", b =>
+                {
+                    b.Navigation("Feedbacks");
+                });
+
             modelBuilder.Entity("CRS_API.Models.Domain.User", b =>
                 {
+                    b.Navigation("Feedbacks");
+
                     b.Navigation("Rentals");
                 });
 #pragma warning restore 612, 618
