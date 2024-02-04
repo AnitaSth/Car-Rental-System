@@ -1,13 +1,12 @@
 ﻿using CRS_API.Models.Domain;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using CRS_API.Models.DTO;
 using CRS_API.DB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using CRS_API.Enums;
-using static System.Net.Mime.MediaTypeNames;
-using System.Drawing;
+using CRS_API.Repositories;
+using AutoMapper;
 
 namespace CRS_API.Controllers
 {
@@ -16,48 +15,26 @@ namespace CRS_API.Controllers
 	public class CarsController : ControllerBase
 	{
 		private readonly CRSDbContext _db;
+		private readonly ICarRepository carRepository;
+		private readonly IMapper mapper;
 
-		public CarsController(CRSDbContext _db)
+		public CarsController(CRSDbContext _db, ICarRepository carRepository, IMapper mapper)
 		{
 			this._db = _db;
-		}
+			this.carRepository = carRepository;
+			this.mapper = mapper;
+		} 
 
 		// Get all cars
 		[HttpGet]
-		//[Authorize(Roles = "Admin, Customer, VehicleOwner")]
-		public ActionResult<List<CarDto>> GetAll()
+		public async Task<IActionResult> GetAll()
 		{
-			List<Car> cars = _db.Cars.Include("User").ToList();
+			// Get Data From Database - Domain models
+			var carsDomain = await carRepository.GetAllAsync();
 
+			// Map Domain Models to DTOs
+			var carsDto = mapper.Map<List<CarDto>>(carsDomain);
 
-			List<CarDto> carsDto = new List<CarDto>();
-
-			foreach (var car in cars)
-			{
-				carsDto.Add(new CarDto()
-				{
-					Id = car.Id,
-					Manufacturer = car.Manufacturer,
-					Model = car.Model,
-					LicensePlate = car.LicensePlate,
-					Color = car.Color,
-					FuelType = car.FuelType.ToString(),
-					TransmissionType = car.TransmissionType.ToString(),
-					Mileage = car.Mileage,
-					PassengerSeat = car.PassengerSeat,
-					RentalPrice = car.RentalPrice,
-					Condition = car.Condition.ToString(),
-					Image = car.Image,
-					Availability = car.Availability,
-					User = new UserDto
-					{
-						Id = car.User.Id,
-						PhoneNumber = car.User.PhoneNumber,	
-						FullName = car.User.FullName,
-						Role = car.User.Role.ToString(),
-					}
-				});
-			}
 
 			return Ok(carsDto);
 		}
@@ -65,39 +42,13 @@ namespace CRS_API.Controllers
 		// Get CRS cars
 		[HttpGet("crs")]
 		//[Authorize(Roles = "Admin, Customer, VehicleOwner")]
-		public ActionResult<List<CarDto>> GetCRSCars()
+		public async Task<IActionResult> GetCRSCars()
 		{
-			var cars = _db.Cars.Include("User").Where(x => x.User.Role == UserRole.Admin).ToList();
+			// Get Data From Database - Domain models
+			var carsDomain = await carRepository.GetCRSCarsAsync();
 
-
-			List<CarDto> carsDto = new List<CarDto>();
-
-			foreach (var car in cars)
-			{
-				carsDto.Add(new CarDto()
-				{
-					Id = car.Id,
-					Manufacturer = car.Manufacturer,
-					Model = car.Model,
-					LicensePlate = car.LicensePlate,
-					Color = car.Color,
-					FuelType = car.FuelType.ToString(),
-					TransmissionType = car.TransmissionType.ToString(),
-					Mileage = car.Mileage,
-					PassengerSeat = car.PassengerSeat,
-					RentalPrice = car.RentalPrice,
-					Condition = car.Condition.ToString(),
-					Image = car.Image,
-					Availability = car.Availability,
-					User = new UserDto
-					{
-						Id = car.User.Id,
-						PhoneNumber = car.User.PhoneNumber,
-						FullName = car.User.FullName,
-						Role = car.User.Role.ToString(),
-					}
-				});
-			}
+			// Map Domain Models to DTOs
+			var carsDto = mapper.Map<List<CarDto>>(carsDomain);
 
 			return Ok(carsDto);
 		}
@@ -106,39 +57,13 @@ namespace CRS_API.Controllers
 		// Get CRS cars
 		[HttpGet("thirdparty")]
 		//[Authorize(Roles = "Admin, Customer, VehicleOwner")]
-		public ActionResult<List<CarDto>> GetThirdPartyCars()
+		public async Task<IActionResult> GetThirdPartyCars()
 		{
-			var cars = _db.Cars.Include("User").Where(x => x.User.Role == UserRole.VehicleOwner).ToList();
+			// Get Data From Database - Domain models
+			var carsDomain = await carRepository.GetThirdPartyCarsAsync();
 
-
-			List<CarDto> carsDto = new List<CarDto>();
-
-			foreach (var car in cars)
-			{
-				carsDto.Add(new CarDto()
-				{
-					Id = car.Id,
-					Manufacturer = car.Manufacturer,
-					Model = car.Model,
-					LicensePlate = car.LicensePlate,
-					Color = car.Color,
-					FuelType = car.FuelType.ToString(),
-					TransmissionType = car.TransmissionType.ToString(),
-					Mileage = car.Mileage,
-					PassengerSeat = car.PassengerSeat,
-					RentalPrice = car.RentalPrice,
-					Condition = car.Condition.ToString(),
-					Image = car.Image,
-					Availability = car.Availability,
-					User = new UserDto
-					{
-						Id = car.User.Id,
-						PhoneNumber = car.User.PhoneNumber,
-						FullName = car.User.FullName,
-						Role = car.User.Role.ToString(),
-					}
-				});
-			}
+			// Map Domain Models to DTOs
+			var carsDto = mapper.Map<List<CarDto>>(carsDomain);
 
 			return Ok(carsDto);
 		}
@@ -147,38 +72,18 @@ namespace CRS_API.Controllers
 		// Get car by Id
 		[HttpGet("{id:Guid}")]
 		//[Authorize(Roles = "Admin, Customer, VehicleOwner")]
-		public ActionResult<CarDto> GetById(Guid id)
+		public async Task<IActionResult> GetById([FromRoute] Guid id)
 		{
-			Car? car = _db.Cars.Include("User").FirstOrDefault(car => car.Id == id);
+			// Get Data From Database - Domain models
+			Car? car = await carRepository.GetByIdAsync(id);
 
 			if (car == null)
 			{
 				return NotFound();
 			}
 
-			CarDto carDto = new CarDto()
-			{
-				Id = car.Id,
-				Manufacturer = car.Manufacturer,
-				Model = car.Model,
-				LicensePlate = car.LicensePlate,
-				Color = car.Color,
-				FuelType = car.FuelType.ToString(),
-				TransmissionType = car.TransmissionType.ToString(),
-				Mileage = car.Mileage,
-				PassengerSeat = car.PassengerSeat,
-				RentalPrice = car.RentalPrice,
-				Condition = car.Condition.ToString(),
-				Image = car.Image,
-				Availability = car.Availability,
-				User = new UserDto
-				{
-					Id = car.User.Id,
-					PhoneNumber = car.User.PhoneNumber,
-					FullName = car.User.FullName,
-					Role = car.User.Role.ToString(),
-				}
-			};
+			// Map Domain Models to DTOs
+			var carDto = mapper.Map<CarDto>(car);
 
 			return Ok(carDto);
 		}
@@ -186,53 +91,37 @@ namespace CRS_API.Controllers
 		// Post car
 		[HttpPost]
 		[Authorize(Roles = "Admin, VehicleOwner")]
-		public ActionResult<CarDto> Create([FromBody] CarRequestDto carRequestDto)
+		public async Task<IActionResult> Create([FromBody] CarRequestDto carRequestDto)
 		{
-			Car car = new Car
+			// Map or Convert DTO to Domain Model
+			var carDomainModel = mapper.Map<Car>(carRequestDto);
+
+			// Use Domain Model to create Car
+			carDomainModel = await carRepository.CreateAsync(carDomainModel);
+
+			// Map Domain model back to DTO
+			var carDto = mapper.Map<CarDto>(carDomainModel);
+
+			return Ok(carDto);
+		}
+
+		[HttpPut("{id:Guid}")]
+		[Authorize(Roles = "Admin, VehicleOwner")]
+		public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] CarRequestDto carRequestDto) 
+		{
+			// Map DTO to Domain Model
+			var carDomainModel = mapper.Map<Car>(carRequestDto);
+
+			// Check if car exists
+			carDomainModel =  await carRepository.UpdateAsync(id, carDomainModel);
+
+			if (carDomainModel == null)
 			{
-				Manufacturer = carRequestDto.Manufacturer,
-				Model = carRequestDto.Model,
-				LicensePlate = carRequestDto.LicensePlate,
-				Color = carRequestDto.Color,
-				FuelType = (FuelType)Enum.Parse(typeof(FuelType), carRequestDto.FuelType),
-				TransmissionType = (TransmissionType)Enum.Parse(typeof(TransmissionType), carRequestDto.TransmissionType),
-				Mileage = carRequestDto.Mileage,
-				PassengerSeat = carRequestDto.PassengerSeat,
-				RentalPrice = carRequestDto.RentalPrice,
-				Condition = (Condition)Enum.Parse(typeof(Condition), carRequestDto.Condition),
-				Image = carRequestDto.Image,
-				Availability = carRequestDto.Availability,
-				UserId = carRequestDto.UserId,
-			};
+				return BadRequest("Car not found");
+			}
 
-			_db.Add(car);
-			_db.SaveChanges();
-
-			car = _db.Cars.Include("User").FirstOrDefault(c => c.Id == car.Id);
-
-			CarDto carDto = new CarDto
-			{
-				Id = car.Id,
-				Manufacturer = car.Manufacturer,
-				Model = car.Model,
-				LicensePlate = car.LicensePlate,
-				Color = car.Color,
-				FuelType = car.FuelType.ToString(),
-				TransmissionType = car.TransmissionType.ToString(),
-				Mileage = car.Mileage,
-				PassengerSeat = car.PassengerSeat,
-				RentalPrice = car.RentalPrice,
-				Condition = car.Condition.ToString(),
-				Image = car.Image,
-				Availability = car.Availability,
-				User = new UserDto
-				{
-					Id = car.User.Id,
-					PhoneNumber = car.User.PhoneNumber,
-					FullName = car.User.FullName,
-					Role = car.User.Role.ToString(),
-				}
-			};
+			// Convert Domain Model to DTO
+			var carDto = mapper.Map<CarDto>(carDomainModel);
 
 			return Ok(carDto);
 		}
@@ -240,92 +129,18 @@ namespace CRS_API.Controllers
 
 		[HttpDelete("{id:Guid}")]
 		[Authorize(Roles = "Admin, VehicleOwner")]
-		public IActionResult Delete(Guid id)
+		public async Task<IActionResult> Delete([FromRoute] Guid id)
 		{
-			Car car = _db.Cars.FirstOrDefault(x => x.Id == id);
+			var carDomainModel = await carRepository.DeleteAsync(id);
 
-			if (car == null)
+			if (carDomainModel == null)
 			{
-				return BadRequest("Car not found.");
+				return NotFound();
 			}
 
-			_db.Cars.Remove(car);	
-			_db.SaveChanges();
-			return NoContent();	
-		}
-
-		[HttpPut("{id:Guid}")]
-		[Authorize(Roles = "Admin, VehicleOwner")]
-		public ActionResult<CarDto> Update(Guid id, [FromBody] CarRequestDto carRequestDto) 
-		{
-			Car car = _db.Cars.FirstOrDefault(x => x.Id == id);
-
-			if (car == null)
-			{
-				return BadRequest("Car not found");
-			}
-
-			car.Manufacturer = carRequestDto.Manufacturer;
-			car.Model = carRequestDto.Model;
-			car.LicensePlate = carRequestDto.LicensePlate;
-			car.Color = carRequestDto.Color;
-			car.FuelType = (FuelType)Enum.Parse(typeof (FuelType), carRequestDto.FuelType);
-			car.TransmissionType = (TransmissionType)Enum.Parse(typeof (TransmissionType), carRequestDto.TransmissionType);
-			car.Mileage = carRequestDto.Mileage;
-			car.PassengerSeat = carRequestDto.PassengerSeat;
-			car.RentalPrice = carRequestDto.RentalPrice;
-			car.Condition = (Condition)Enum.Parse(typeof(Condition), carRequestDto.Condition);
-			car.Image = carRequestDto.Image;
-			car.Availability = carRequestDto.Availability;
-			car.UserId = carRequestDto.UserId;
-
-			_db.SaveChanges();
-
-			car = _db.Cars.Include("User").FirstOrDefault(c => c.Id == car.Id)!;
-
-
-			CarDto carDto = new CarDto
-			{
-				Id = car.Id,
-				Manufacturer = car.Manufacturer,
-				Model = car.Model,
-				LicensePlate = car.LicensePlate,
-				Color = car.Color,
-				FuelType = car.FuelType.ToString(),
-				TransmissionType = car.TransmissionType.ToString(),
-				Mileage = car.Mileage,
-				PassengerSeat = car.PassengerSeat,
-				RentalPrice = car.RentalPrice,
-				Condition = car.Condition.ToString(),
-				Image = car.Image,
-				Availability = car.Availability,
-				User = new UserDto
-				{
-					Id = car.User.Id,
-					PhoneNumber = car.User.PhoneNumber,
-					FullName = car.User.FullName,
-					Role = car.User.Role.ToString(),
-				}
-			};
-
-			return Ok(carDto);
+			return NoContent();
 		}
 	}
 }
 
 
-/*{
-	"manufacturer": "KIA",
-  "model": "Sportage",
-  "licensePlate": "KI678",
-  "color": "Black",
-  "fuelType": "Petrol",
-  "transmissionType": "Automatic",
-  "mileage": 16,
-  "passengerSeat": 4,
-  "rentalPrice": 3400,
-  "condition": "Good",
-  "image": "https://s7d2.scene7.com/is/image/kiamotors/kia_sportage-hev_2024_mep_dynamic_hero_1:XL?$LandscapeAsset_1440x730$&fmt=jpg&qlt=100,0&resMode=sharp2&op_usm=1.75,0.9,1,0&dpr=on,2",
-  "availability": true,
-  "userId": 2
-}*/

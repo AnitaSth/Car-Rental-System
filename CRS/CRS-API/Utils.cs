@@ -14,6 +14,7 @@ namespace CRS_API
 
 			claims.Add(new Claim(ClaimTypes.Name, user.PhoneNumber));
 			claims.Add(new Claim(ClaimTypes.Role, user.Role.ToString()));
+			claims.Add(new Claim("userId", user.Id.ToString()));
 
 
 			var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!));
@@ -26,5 +27,22 @@ namespace CRS_API
 
 			return jwt;
 		}
+
+		
 	}
 }
+
+/*
+{
+	"return_url": "https://example.com/payment/",
+  "website_url": "https://example.com/",
+  "amount": 1300,
+  "purchase_order_id": "test12",
+  "purchase_order_name": "test",
+  "customer_info": {
+		"name": "Ashim Upadhaya",
+      "email": "example@gmail.com",
+      "phone": "9811496763"
+  }
+}
+*/

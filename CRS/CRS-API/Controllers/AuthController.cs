@@ -2,10 +2,7 @@
 using CRS_API.Enums;
 using CRS_API.Models.Domain;
 using CRS_API.Models.DTO;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 
 namespace CRS_API.Controllers
 {
@@ -14,7 +11,7 @@ namespace CRS_API.Controllers
 	public class AuthController : ControllerBase
 	{
 		private readonly CRSDbContext _db;
-		public IConfiguration _configuration;
+		private IConfiguration _configuration;
 
 		public AuthController(CRSDbContext _db, IConfiguration configuration)
         {

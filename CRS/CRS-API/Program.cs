@@ -1,18 +1,25 @@
 using CRS_API.DB;
+using CRS_API.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using CRS_API.Mappings;
+using CRS_API.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddHttpContextAccessor();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
+
 builder.Services.AddSwaggerGen(options =>
 {
 	options.SwaggerDoc("v1", new OpenApiInfo { Title = "CRS API", Version = "v1" });
@@ -42,6 +49,15 @@ builder.Services.AddSwaggerGen(options =>
 	});
 });
 
+
+builder.Services.AddDbContext<CRSDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("CRS_APIConnectionString")));
+
+builder.Services.AddScoped<ICarRepository, SQLCarRepository>();
+/*builder.Services.AddScoped<IUserRepository, SQLUserRepository>();*/
+
+builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
+
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => options.TokenValidationParameters = new TokenValidationParameters
 {
 	ValidateIssuer = true,
@@ -53,7 +69,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 	IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
 });
 
-builder.Services.AddDbContext<CRSDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("CRS_APIConnectionString")));
+
 
 builder.Services.AddCors(options =>
 {
@@ -71,12 +87,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication();	
+app.UseCors("AllowReactApp");
 
+app.UseAuthentication();	
 app.UseAuthorization();
 
 app.MapControllers();
-
-app.UseCors("AllowReactApp");
 
 app.Run();
