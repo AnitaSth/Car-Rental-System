@@ -19,7 +19,7 @@ const AdminUsers = () => {
         if (user) {
             if (user.role === "Admin") {
                 userService
-                    .getUsers(user.token)
+                    .getAllUsers(user.token)
                     .then((res) => {
                         setUsers(res.data);
                         setIsLoading(false);

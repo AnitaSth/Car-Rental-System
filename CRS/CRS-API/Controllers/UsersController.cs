@@ -29,7 +29,7 @@ namespace CRS_API.Controllers
 		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> GetAll()
 		{
-			var usersDomain = userRepository.GetAllAsync();
+			var usersDomain = await userRepository.GetAllAsync();
 
 			var usersDto = mapper.Map<List<UserDto>>(usersDomain);
 

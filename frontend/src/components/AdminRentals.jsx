@@ -18,7 +18,7 @@ const AdminRentals = () => {
         if (user) {
             if (user.role === "Admin") {
                 rentalService
-                    .getRentals(user.id, user.token)
+                    .getAllRentals(user.token)
                     .then((res) => {
                         setRentals(res.data);
                         setIsLoading(false);
@@ -66,8 +66,22 @@ const AdminRentals = () => {
                                         {rental.car.model}
                                     </td>
                                     <td>{rental.user.phoneNumber}</td>
-                                    <td>{rental.startDate}</td>
-                                    <td>{rental.endDate}</td>
+                                    <td>
+                                        {new Date(
+                                            rental.startDate
+                                        ).toDateString()}{" "}
+                                        {new Date(
+                                            rental.startDate
+                                        ).toLocaleTimeString()}
+                                    </td>
+                                    <td>
+                                        {new Date(
+                                            rental.endDate
+                                        ).toDateString()}{" "}
+                                        {new Date(
+                                            rental.endDate
+                                        ).toLocaleTimeString()}
+                                    </td>
                                     <td>{rental.totalCost}</td>
                                 </tr>
                             ))}

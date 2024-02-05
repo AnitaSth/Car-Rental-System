@@ -6,10 +6,10 @@ namespace CRS_API.Models.Domain
 	public class Car
 	{
 		public Guid Id { get; set; }
-		public string Manufacturer { get; set; } = string.Empty;
-		public string Model { get; set; } = string.Empty;
-		public string LicensePlate { get; set; } = string.Empty;
-		public string Color { get; set; } = string.Empty;
+		public string Manufacturer { get; set; }
+		public string Model { get; set; }
+		public string LicensePlate { get; set; }
+		public string Color { get; set; }
 		public FuelType FuelType { get; set; }
 		public TransmissionType TransmissionType { get; set; }
 		public float Mileage { get; set; }

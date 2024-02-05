@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import ErrorMessage from "../components/ErrorMessage";
 import Loader from "../components/Loader";
-import RentModal from "../components/RentModal";
 import { useAuth } from "../hooks/useAuth";
 import carService from "../services/carService";
 
@@ -30,12 +29,11 @@ const CarDetailsPage = () => {
             });
     }, [carId]);
 
-    const handleRent = (e) => {
-        e.preventDefault();
-        if (user) {
-            document.getElementById("my_modal_1").showModal();
-        } else {
+    const rentHandler = () => {
+        if (!user) {
             navigate(`/login?redirect=/cars/${carId}`, { replace: false });
+        } else {
+            navigate(`/cars/${carId}/rent`);
         }
     };
 
@@ -130,11 +128,10 @@ const CarDetailsPage = () => {
                                         ? "bg-red-500 cursor-pointer"
                                         : "bg-red-300"
                                 }`}
-                                onClick={handleRent}
+                                onClick={rentHandler}
                             >
                                 Rent
                             </button>
-                            <RentModal car={car} />
                         </div>
                     </div>
                 )}

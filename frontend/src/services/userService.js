@@ -1,7 +1,7 @@
 import apiClient from "./apiClient";
 
 class UserService {
-    getUsers(token) {
+    getAllUsers(token) {
         return apiClient.get("/users", {
             headers: {
                 Authorization: `Bearer ${token}`,

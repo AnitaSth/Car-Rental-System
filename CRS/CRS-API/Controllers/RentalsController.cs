@@ -1,14 +1,10 @@
 ﻿using AutoMapper;
 using CRS_API.DB;
-using CRS_API.Enums;
-using CRS_API.Interfaces;
 using CRS_API.Models.Domain;
 using CRS_API.Models.DTO;
 using CRS_API.Repositories;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace CRS_API.Controllers
@@ -38,7 +34,7 @@ namespace CRS_API.Controllers
 			var rentalsDomain = await rentalsRepository.GetAll();
 
 			// Map Domain Models to DTOs
-			var rentalsDto = mapper.Map<RentalDto>(rentalsDomain);
+			var rentalsDto = mapper.Map<List<RentalDto>>(rentalsDomain);
 
 			return Ok(rentalsDto);
 		}

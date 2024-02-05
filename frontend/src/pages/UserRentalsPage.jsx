@@ -17,7 +17,7 @@ const UserRentalsPage = () => {
         setIsLoading(true);
         if (user) {
             rentalService
-                .getRentals(user.id, user.token)
+                .getRentals(user.token)
                 .then((res) => {
                     setRentals(res.data);
                     setIsLoading(false);
@@ -58,8 +58,22 @@ const UserRentalsPage = () => {
                                         {rental.car.manufacturer} -{" "}
                                         {rental.car.model}
                                     </td>
-                                    <td>{rental.startDate}</td>
-                                    <td>{rental.endDate}</td>
+                                    <td>
+                                        {new Date(
+                                            rental.startDate
+                                        ).toDateString()}{" "}
+                                        {new Date(
+                                            rental.startDate
+                                        ).toLocaleTimeString()}
+                                    </td>
+                                    <td>
+                                        {new Date(
+                                            rental.endDate
+                                        ).toDateString()}
+                                        {new Date(
+                                            rental.endDate
+                                        ).toLocaleTimeString()}
+                                    </td>
                                     <td>{rental.totalCost}</td>
                                 </tr>
                             ))}
