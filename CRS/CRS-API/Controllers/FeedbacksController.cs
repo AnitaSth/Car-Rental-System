@@ -10,11 +10,11 @@ namespace CRS_API.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	public class FeedbackController : ControllerBase
+	public class FeedbacksController : ControllerBase
 	{
 		private readonly CRSDbContext _db;
 
-		public FeedbackController(CRSDbContext _db)
+		public FeedbacksController(CRSDbContext _db)
         {
 			this._db = _db;
 		}
@@ -58,6 +58,7 @@ namespace CRS_API.Controllers
 
 
 		[HttpPost]
+		[Authorize(Roles = "Admin, Customer, Vehicl")]
 		public ActionResult<FeedbackDto> Create([FromBody] FeedbackRequestDto feedbackRequestDto) 
 		{
 			Feedback feedback = new Feedback

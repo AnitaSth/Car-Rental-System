@@ -3,6 +3,7 @@ using CRS_API.Enums;
 using CRS_API.Models.Domain;
 using CRS_API.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CRS_API.Controllers
 {
@@ -20,13 +21,13 @@ namespace CRS_API.Controllers
 		}
 
         [HttpPost("register")]
-		public ActionResult<UserDto> Register(UserRequestDto user)
+		public async Task<IActionResult> Register(UserRequestDto user)
 		{
 			string passwordHash = BCrypt.Net.BCrypt.HashPassword(user.Password);
 
-			var exists = _db.Users.FirstOrDefault(x => x.PhoneNumber == user.PhoneNumber);
+			var existingUser = await _db.Users.FirstOrDefaultAsync(x => x.PhoneNumber == user.PhoneNumber);
 
-			if (exists != null)
+			if (existingUser != null)
 			{
 				return BadRequest("This user already exists.");
 			}
@@ -41,8 +42,8 @@ namespace CRS_API.Controllers
 					Role = (UserRole)Enum.Parse(typeof(UserRole), user.Role)
 				};
 
-				_db.Users.Add(newUser);
-				_db.SaveChanges();
+				await _db.Users.AddAsync(newUser);
+				await _db.SaveChangesAsync();
 
 				UserDto userDto = new UserDto
 				{
@@ -58,9 +59,9 @@ namespace CRS_API.Controllers
 		}
 
 		[HttpPost("login")]
-		public ActionResult<UserResponseDto> Login(UserLoginDto request)
+		public async Task<IActionResult> Login(UserLoginDto request)
 		{
-			User? user = _db.Users.FirstOrDefault(x => x.PhoneNumber == request.PhoneNumber);
+			User? user = await _db.Users.FirstOrDefaultAsync(x => x.PhoneNumber == request.PhoneNumber);
 
 			if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
 			{

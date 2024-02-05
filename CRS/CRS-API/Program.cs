@@ -53,7 +53,8 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddDbContext<CRSDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("CRS_APIConnectionString")));
 
 builder.Services.AddScoped<ICarRepository, SQLCarRepository>();
-/*builder.Services.AddScoped<IUserRepository, SQLUserRepository>();*/
+builder.Services.AddScoped<IUserRepository, SQLUserRepository>();
+builder.Services.AddScoped<IRentalsRepository, SQLRentalsRepository>();
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
 

@@ -1,9 +1,11 @@
-﻿using CRS_API.DB;
+﻿using AutoMapper;
+using CRS_API.DB;
+using CRS_API.Interfaces;
 using CRS_API.Models.Domain;
 using CRS_API.Models.DTO;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace CRS_API.Controllers
 {
@@ -12,47 +14,40 @@ namespace CRS_API.Controllers
 	public class UsersController : ControllerBase
 	{
 		private readonly CRSDbContext _db;
+		private readonly IUserRepository userRepository;
+		private readonly IMapper mapper;
 
-		public UsersController(CRSDbContext _db)
-        {
+		public UsersController(CRSDbContext _db, IUserRepository userRepository, IMapper mapper)
+		{
 			this._db = _db;
+			this.userRepository = userRepository;
+			this.mapper = mapper;
 		}
+
 
 		[HttpGet]
 		[Authorize(Roles = "Admin")]
-		public ActionResult<List<UserDto>> Get()
+		public async Task<IActionResult> GetAll()
 		{
-			List<User> users = _db.Users.ToList();
+			var usersDomain = userRepository.GetAllAsync();
 
-			List<UserDto> usersDto = new List<UserDto>();
-
-			foreach (var user in users)
-			{
-				usersDto.Add(new UserDto
-				{
-					Id = user.Id,
-					PhoneNumber = user.PhoneNumber,
-					FullName = user.FullName,
-					Role = user.Role.ToString()
-				});
-			}
+			var usersDto = mapper.Map<List<UserDto>>(usersDomain);
 
 			return Ok(usersDto);
 		}
 
+
 		[HttpDelete("{id:Guid}")]
 		[Authorize(Roles = "Admin")]
-		public IActionResult Delete(Guid id)
+		public async Task<IActionResult> Delete([FromRoute] Guid id)
 		{
-			User user = _db.Users.FirstOrDefault(x => x.Id == id);	
+			var userDomain = await userRepository.DeleteAsync(id);
 
-			if (user == null)
+			if (userDomain == null)
 			{
 				return NotFound();
 			}
 
-			_db.Users.Remove(user);
-			_db.SaveChanges();
 			return NoContent();
 		}
 	}

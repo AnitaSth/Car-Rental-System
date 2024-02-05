@@ -10,7 +10,10 @@ namespace CRS_API.Mappings
         {
             CreateMap<Car, CarDto>().ReverseMap();
             CreateMap<Car, CarRequestDto>().ReverseMap();
+			CreateMap<Car, CarResponseDto>().ReverseMap();
 			CreateMap<User, UserDto>().ReverseMap();
+			CreateMap<Rental, RentalDto>().ReverseMap();
+			CreateMap<Rental, RentalRequestDto>().ReverseMap();
 		}
 	}
 }

@@ -14,5 +14,13 @@
         "startDate": "2024-01-21T11:59:05.194",
         "endDate": "2024-01-23T11:59:05.194",
         "totalCost": 5000,
+    },
+    {
+        "id": "4bacf611-b9a9-4edd-5a2e-08dc26150e76",
+        "userId": "c561ae17-e3a4-409e-6ae9-08dc231aff8a",
+        "carId": "3a6a3f2a-8aff-452f-f29a-08dc231bd32e",
+        "startDate": "2024-01-21T11:59:05.194",
+        "endDate": "2024-01-23T11:59:05.194",
+        "totalCost": 5000,
     }
 ]

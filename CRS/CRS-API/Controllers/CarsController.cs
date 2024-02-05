@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using CRS_API.Enums;
 using CRS_API.Repositories;
 using AutoMapper;
+using System.Security.Claims;
 
 namespace CRS_API.Controllers
 {
@@ -35,13 +36,11 @@ namespace CRS_API.Controllers
 			// Map Domain Models to DTOs
 			var carsDto = mapper.Map<List<CarDto>>(carsDomain);
 
-
 			return Ok(carsDto);
 		}
 
 		// Get CRS cars
 		[HttpGet("crs")]
-		//[Authorize(Roles = "Admin, Customer, VehicleOwner")]
 		public async Task<IActionResult> GetCRSCars()
 		{
 			// Get Data From Database - Domain models
@@ -56,7 +55,6 @@ namespace CRS_API.Controllers
 		
 		// Get CRS cars
 		[HttpGet("thirdparty")]
-		//[Authorize(Roles = "Admin, Customer, VehicleOwner")]
 		public async Task<IActionResult> GetThirdPartyCars()
 		{
 			// Get Data From Database - Domain models
@@ -71,7 +69,6 @@ namespace CRS_API.Controllers
 
 		// Get car by Id
 		[HttpGet("{id:Guid}")]
-		//[Authorize(Roles = "Admin, Customer, VehicleOwner")]
 		public async Task<IActionResult> GetById([FromRoute] Guid id)
 		{
 			// Get Data From Database - Domain models
@@ -94,13 +91,13 @@ namespace CRS_API.Controllers
 		public async Task<IActionResult> Create([FromBody] CarRequestDto carRequestDto)
 		{
 			// Map or Convert DTO to Domain Model
-			var carDomainModel = mapper.Map<Car>(carRequestDto);
+			var carDomain = mapper.Map<Car>(carRequestDto);
 
 			// Use Domain Model to create Car
-			carDomainModel = await carRepository.CreateAsync(carDomainModel);
+			carDomain = await carRepository.CreateAsync(carDomain);
 
 			// Map Domain model back to DTO
-			var carDto = mapper.Map<CarDto>(carDomainModel);
+			var carDto = mapper.Map<CarDto>(carDomain);
 
 			return Ok(carDto);
 		}
@@ -110,18 +107,27 @@ namespace CRS_API.Controllers
 		public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] CarRequestDto carRequestDto) 
 		{
 			// Map DTO to Domain Model
-			var carDomainModel = mapper.Map<Car>(carRequestDto);
+			var carDomain = mapper.Map<Car>(carRequestDto);
 
 			// Check if car exists
-			carDomainModel =  await carRepository.UpdateAsync(id, carDomainModel);
+			carDomain =  await carRepository.UpdateAsync(id, carDomain);
 
-			if (carDomainModel == null)
+			if (carDomain == null)
 			{
-				return BadRequest("Car not found");
+				return NotFound();
+			}
+
+			// Get current user id
+			var currentUserId = HttpContext.User.FindFirstValue("userId");
+
+			// Check if the author of the car is the current user
+			if (carDomain.UserId != Guid.Parse(currentUserId))
+			{
+				return Unauthorized();
 			}
 
 			// Convert Domain Model to DTO
-			var carDto = mapper.Map<CarDto>(carDomainModel);
+			var carDto = mapper.Map<CarDto>(carDomain);
 
 			return Ok(carDto);
 		}
@@ -131,11 +137,20 @@ namespace CRS_API.Controllers
 		[Authorize(Roles = "Admin, VehicleOwner")]
 		public async Task<IActionResult> Delete([FromRoute] Guid id)
 		{
-			var carDomainModel = await carRepository.DeleteAsync(id);
+			var carDomain = await carRepository.DeleteAsync(id);
 
-			if (carDomainModel == null)
+			if (carDomain == null)
 			{
 				return NotFound();
+			}
+
+			// Get current user id
+			var currentUserId = HttpContext.User.FindFirstValue("userId");
+
+			// Check if the author of the car is the current user
+			if (carDomain.UserId != Guid.Parse(currentUserId))
+			{
+				return Unauthorized();
 			}
 
 			return NoContent();

@@ -17,10 +17,3 @@ namespace CRS_API.Models.DTO
 	}
 }
 
-/*{
-	"userId": "e7a70e63-cd75-4507-d145-08dc1fc15097",
-  "carId": "8096a4a8-4d47-484d-0dd2-08dc1e4b30ea",
-  "startDate": "2024-01-28T05:42:22.358Z",
-  "endDate": "2024-01-29T05:42:22.358Z",
-  "totalCost": 2500
-}*/
