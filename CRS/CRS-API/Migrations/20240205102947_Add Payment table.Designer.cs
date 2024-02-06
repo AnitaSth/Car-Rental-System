@@ -4,6 +4,7 @@ using CRS_API.DB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CRS_API.Migrations
 {
     [DbContext(typeof(CRSDbContext))]
-    partial class CRSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240205102947_Add Payment table")]
+    partial class AddPaymenttable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -113,13 +116,13 @@ namespace CRS_API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("PaymentAmount")
+                    b.Property<int>("Amount")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("PaymentDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("PaymentMethod")
+                    b.Property<int>("PaymentType")
                         .HasColumnType("int");
 
                     b.Property<Guid>("RentalId")
@@ -133,8 +136,7 @@ namespace CRS_API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RentalId")
-                        .IsUnique();
+                    b.HasIndex("RentalId");
 
                     b.HasIndex("UserId");
 
@@ -149,9 +151,6 @@ namespace CRS_API.Migrations
 
                     b.Property<Guid>("CarId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Duration")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
@@ -233,8 +232,8 @@ namespace CRS_API.Migrations
             modelBuilder.Entity("CRS_API.Models.Domain.Payment", b =>
                 {
                     b.HasOne("CRS_API.Models.Domain.Rental", "Rental")
-                        .WithOne("Payment")
-                        .HasForeignKey("CRS_API.Models.Domain.Payment", "RentalId")
+                        .WithMany("Payments")
+                        .HasForeignKey("RentalId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
@@ -275,8 +274,7 @@ namespace CRS_API.Migrations
 
             modelBuilder.Entity("CRS_API.Models.Domain.Rental", b =>
                 {
-                    b.Navigation("Payment")
-                        .IsRequired();
+                    b.Navigation("Payments");
                 });
 
             modelBuilder.Entity("CRS_API.Models.Domain.User", b =>

@@ -27,7 +27,7 @@ namespace CRS_API.Controllers
 
 
 		[HttpGet]
-		[Authorize(Roles = "Admin")]
+		//[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> GetAll()
 		{
 			// Get Data From Database - Domain models

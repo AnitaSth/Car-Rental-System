@@ -47,6 +47,7 @@ const UserRentalsPage = () => {
                                 <th>Car</th>
                                 <th>Start Date</th>
                                 <th>End Date</th>
+                                <th>Duration</th>
                                 <th>Total Cost</th>
                             </tr>
                         </thead>
@@ -74,6 +75,7 @@ const UserRentalsPage = () => {
                                             rental.endDate
                                         ).toLocaleTimeString()}
                                     </td>
+                                    <td>{rental.duration}</td>
                                     <td>{rental.totalCost}</td>
                                 </tr>
                             ))}

@@ -7,6 +7,7 @@ import DateTimePicker from "react-datetime-picker";
 import { toast } from "react-toastify";
 import { useAuth } from "../hooks/useAuth";
 import rentalService from "../services/rentalService";
+import paymentService from "../services/paymentService";
 
 const RentPage = () => {
     const [car, setCar] = useState({});
@@ -17,7 +18,7 @@ const RentPage = () => {
     const [rentValue, setRentValue] = useState(today);
     const [returnValue, setReturnValue] = useState(today);
     const [cost, setCost] = useState(0);
-    const [rentalDuration, setRentalDuration] = useState(0);
+    const [rentalDuration, setRentalDuration] = useState(1);
     const [disable, setDisable] = useState(false);
 
     const paymentMethods = ["Cash", "Khalti"];
@@ -61,10 +62,6 @@ const RentPage = () => {
 
     useEffect(() => {
         if (rentValue.getTime() > returnValue.getTime()) {
-            // toast("Renting date cannot be greater can returning date", {
-            //     type: "error",
-            //     autoClose: 1000,
-            // });
             setDisable(true);
         } else {
             setDisable(false);
@@ -72,72 +69,94 @@ const RentPage = () => {
     }, [rentValue, returnValue]);
 
     const handleRent = async () => {
-        // if (user) {
-        //     const amount = parseInt(car.rentalPrice) * 10;
-        //     const name = user.fullName;
-        //     const phone = user.phoneNumber;
-        //     const identity = car.id;
-        //     const productName = `${car.manufacturer} ${car.model}`;
-        //     const purchase_order_id = `${car.id}-${
-        //         user.id
-        //     }-${new Date().getTime()}`;
+        if (user) {
+            const newRental = {
+                userId: user.id,
+                carId: carId,
+                startDate: rentValue,
+                endDate: returnValue,
+                duration: rentalDuration < 1 ? 1 : rentalDuration,
+                totalCost: cost,
+            };
 
-        //     const payload = {
-        //         return_url: "http://localhost:5173/rentals",
-        //         website_url: "http://localhost:5173",
-        //         amount,
-        //         purchase_order_id,
-        //         purchase_order_name: productName,
-        //         customer_info: {
-        //             name,
-        //             email: "example@gmail.com",
-        //             phone: "9849418950",
-        //         },
-        //         product_details: [
-        //             {
-        //                 identity,
-        //                 name: productName,
-        //                 total_price: amount,
-        //                 quantity: 1,
-        //                 unit_price: amount,
-        //             },
-        //         ],
-        //     };
+            const rentalResponse = await rentalService.addRental(
+                newRental,
+                user.token
+            );
 
-        //     const response = await paymentService.pay(payload);
+            const rentalId = rentalResponse.data.id;
 
-        //     if (response) {
-        //         window.location.href = `${response?.data?.data?.payment_url}`;
-        //     }
-        // } else {
-        //     navigate(`/login?redirect=/cars/${carId}`, { replace: false });
-        // }
-        try {
-            if (user) {
-                const newRental = {
+            let paymentResponse;
+
+            if (paymentMethod == "Cash") {
+                const payload = {
                     userId: user.id,
-                    carId: carId,
-                    startDate: rentValue,
-                    endDate: returnValue,
-                    totalCost: cost,
+                    rentalId,
+                    paymentAmount: cost,
+                    paymentMethod,
                 };
 
-                const response = await rentalService.addRental(
-                    newRental,
-                    user.token
-                );
-                console.log(response.data);
+                paymentResponse = await paymentService.pay(payload, user.token);
+            } else {
+                const unit_price = car.rentalPrice;
+                const name = user.fullName;
+                const phone = user.phoneNumber;
+                const identity = car.id;
+                const productName = `${car.manufacturer} ${car.model}`;
+                const purchase_order_id = `${car.id}-${
+                    user.id
+                }-${new Date().getTime()}`;
+
+                const payload = {
+                    return_url: "http://localhost:5173/rentals",
+                    website_url: "http://localhost:5173",
+                    amount: cost,
+                    purchase_order_id,
+                    purchase_order_name: productName,
+                    customer_info: {
+                        name,
+                        email: "example@gmail.com",
+                        phone: "9849418950",
+                    },
+                    product_details: [
+                        {
+                            identity,
+                            name: productName,
+                            total_price: cost,
+                            quantity: rentalDuration < 1 ? 1 : rentalDuration,
+                            unit_price,
+                        },
+                    ],
+
+                    userId: user.id,
+                    rentalId,
+                    paymentAmount: cost,
+                    paymentMethod,
+                };
+
+                paymentResponse = await paymentService.pay(payload, user.token);
+
+                if (paymentResponse.data) {
+                    window.location.href = `${paymentResponse?.data?.data?.payment_url}`;
+                }
             }
-        } catch (error) {
-            setError("An error occurred");
+
+            if (paymentResponse.data) {
+                toast("The car is rented", { type: "success" });
+            } else {
+                toast("An error occurred", { type: "error" });
+            }
+        } else {
+            navigate(`/login?redirect=/cars/${carId}`, { replace: false });
         }
     };
 
     return (
         <div>
             <div className="container mx-auto max-w-[1100px] my-7 max-h-screen py-7">
-                {isLoading && <Loader />}
-                {error ? (
+                {isLoading ? (
+                    <Loader />
+                ) : error ? (
                     <ErrorMessage>{error}</ErrorMessage>
                 ) : (
                     <div className="grid grid-cols-2 justify-between gap-x-10">

@@ -89,20 +89,7 @@ const AdminUsers = () => {
                                     <th>{index + 1}</th>
                                     <td>{user.phoneNumber}</td>
                                     <td>{user.fullName}</td>
-                                    <td>
-                                        <span
-                                            className={
-                                                user.role === "Admin"
-                                                    ? "badge badge-primary text-white"
-                                                    : user.role ===
-                                                      "VehicleOwner"
-                                                    ? "badge badge-accent text-white"
-                                                    : ""
-                                            }
-                                        >
-                                            {user.role}
-                                        </span>
-                                    </td>
+                                    <td>{user.role}</td>
                                     <td>
                                         <button
                                             className="btn btn-error btn-sm text-white"

@@ -16,12 +16,12 @@ namespace CRS_API.Repositories
 
 		public async Task<List<Rental>> GetAll()
 		{
-			return await _db.Rentals.Include("User").Include("Car").ToListAsync();
+			return await _db.Rentals.Include("User").Include("Car").Include("Payment").ToListAsync();
 		}
 
 		public async Task<List<Rental>> GetAsync(string currentUserId)
 		{
-			return await _db.Rentals.Where(r => r.UserId == Guid.Parse(currentUserId)).Include("User").Include("Car").ToListAsync();
+			return await _db.Rentals.Where(r => r.UserId == Guid.Parse(currentUserId)).Include("User").Include("Car").Include("Payment").ToListAsync();
 		}
 
 		public async Task<Rental> CreateAsync (Rental rental)

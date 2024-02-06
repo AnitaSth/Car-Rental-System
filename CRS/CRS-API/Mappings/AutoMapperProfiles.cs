@@ -14,6 +14,9 @@ namespace CRS_API.Mappings
 			CreateMap<User, UserDto>().ReverseMap();
 			CreateMap<Rental, RentalDto>().ReverseMap();
 			CreateMap<Rental, RentalRequestDto>().ReverseMap();
+			CreateMap<Payment, PaymentDto>().ReverseMap();	
+			CreateMap<Payment, PaymentDomainDto>().ReverseMap();	
+
 		}
 	}
 }
