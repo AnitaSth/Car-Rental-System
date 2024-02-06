@@ -5,6 +5,7 @@ using CRS_API.Models.Domain;
 using CRS_API.Models.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace CRS_API.Controllers
@@ -13,13 +14,11 @@ namespace CRS_API.Controllers
 	[ApiController]
 	public class UsersController : ControllerBase
 	{
-		private readonly CRSDbContext _db;
 		private readonly IUserRepository userRepository;
 		private readonly IMapper mapper;
 
-		public UsersController(CRSDbContext _db, IUserRepository userRepository, IMapper mapper)
+		public UsersController(IUserRepository userRepository, IMapper mapper)
 		{
-			this._db = _db;
 			this.userRepository = userRepository;
 			this.mapper = mapper;
 		}
@@ -29,13 +28,30 @@ namespace CRS_API.Controllers
 		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> GetAll()
 		{
+			// Map DTO to Domain Model
 			var usersDomain = await userRepository.GetAllAsync();
 
+			// Convert Domain Model to DTO
 			var usersDto = mapper.Map<List<UserDto>>(usersDomain);
 
 			return Ok(usersDto);
 		}
 
+		[HttpGet("profile")]
+		[Authorize]
+		public async Task<IActionResult> GetProfile()
+		{
+			// Get current logged in user Id
+			var currentUserId = HttpContext.User.FindFirstValue("userId");
+
+			// Map DTO to Domain Model
+			var usersDomain = await userRepository.GetProfileAsync(currentUserId);
+
+			// Convert Domain Model to DTO
+			var usersDto = mapper.Map<UserDto>(usersDomain);
+
+			return Ok(usersDto);
+		}
 
 		[HttpDelete("{id:Guid}")]
 		[Authorize(Roles = "Admin")]

@@ -14,7 +14,7 @@ namespace CRS_API.Interfaces
 			this._db = _db;
 		}
 
-		public async Task<User> GetCurrentUserAsync(string currentUserId)
+		public async Task<User> GetProfileAsync(string currentUserId)
 		{
 			if (currentUserId != null)
 			{
@@ -43,5 +43,6 @@ namespace CRS_API.Interfaces
 			return existingUser;
 		}
 
+		
 	}
 }

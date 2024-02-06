@@ -5,6 +5,14 @@ class CarService {
         return apiClient.get("/cars");
     }
 
+    getCRSCars() {
+        return apiClient.get("/cars/crs");
+    }
+
+    getThirdParty() {
+        return apiClient.get("/cars/thirdparty");
+    }
+
     getSingleCar(carId) {
         return apiClient.get(`/cars/${carId}`);
     }

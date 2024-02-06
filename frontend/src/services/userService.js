@@ -9,6 +9,14 @@ class UserService {
         });
     }
 
+    getProfile(token) {
+        return apiClient.get("/users/profile", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+    }
+
     deleteUser(userId, token) {
         return apiClient.delete(`/users/${userId}`, {
             headers: {

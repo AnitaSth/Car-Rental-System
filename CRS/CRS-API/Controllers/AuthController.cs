@@ -32,30 +32,28 @@ namespace CRS_API.Controllers
 				return BadRequest("This user already exists.");
 			}
 
-			if (user.IsValidRole())
+			
+			User newUser = new User
 			{
-				User newUser = new User
-				{
-					PhoneNumber = user.PhoneNumber,
-					PasswordHash = passwordHash,
-					FullName = user.FullName,
-					Role = (UserRole)Enum.Parse(typeof(UserRole), user.Role)
-				};
+				PhoneNumber = user.PhoneNumber,
+				PasswordHash = passwordHash,
+				FullName = user.FullName,
+				Role = (UserRole)Enum.Parse(typeof(UserRole), user.Role)
+			};
 
-				await _db.Users.AddAsync(newUser);
-				await _db.SaveChangesAsync();
+			await _db.Users.AddAsync(newUser);
+			await _db.SaveChangesAsync();
 
-				UserDto userDto = new UserDto
-				{
-					Id = newUser.Id,
-					PhoneNumber = newUser.PhoneNumber,
-					FullName = newUser.FullName,
-					Role = user.Role,
-				};
+			UserDto userDto = new UserDto
+			{
+				Id = newUser.Id,
+				PhoneNumber = newUser.PhoneNumber,
+				FullName = newUser.FullName,
+				Role = user.Role,
+			};
 
-				return Ok(userDto);
-			}
-            return BadRequest("Invalid role");
+			return Ok(userDto);
+           
 		}
 
 		[HttpPost("login")]

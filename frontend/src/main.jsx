@@ -17,6 +17,7 @@ import AuthProvider from "./providers/AuthProvider";
 import UserRentalsPage from "./pages/UserRentalsPage.jsx";
 import AdminPage from "./pages/AdminPage.jsx";
 import RentPage from "./pages/RentPage.jsx";
+import ProfilePage from "./pages/ProfilePage.jsx";
 
 const router = createBrowserRouter([
     {
@@ -59,6 +60,10 @@ const router = createBrowserRouter([
             {
                 path: "/cars/:id/rent",
                 element: <RentPage />,
+            },
+            {
+                path: "/profile",
+                element: <ProfilePage />,
             },
         ],
     },

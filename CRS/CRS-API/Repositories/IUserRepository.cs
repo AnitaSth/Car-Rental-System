@@ -4,7 +4,7 @@ namespace CRS_API.Interfaces
 {
 	public interface IUserRepository
 	{
-		Task<User> GetCurrentUserAsync(string currentUserId);
+		Task<User> GetProfileAsync(string currentUserId);
 
 		Task<List<User>> GetAllAsync();
 

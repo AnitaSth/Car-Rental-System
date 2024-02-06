@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import ErrorMessage from "../components/ErrorMessage";
 import Loader from "../components/Loader";
-import { useAuth } from "../hooks/useAuth";
 import carService from "../services/carService";
 
 const CarsPage = () => {
@@ -10,22 +9,58 @@ const CarsPage = () => {
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
+    const filterTypes = ["All", "Only CRS", "Third Party"];
+    const [filterType, setFilterType] = useState(filterTypes[0]);
+
     useEffect(() => {
         setIsLoading(true);
-        carService
-            .getAllCars()
-            .then((res) => {
-                setCars(res.data);
-                setIsLoading(false);
-            })
-            .catch((error) => {
-                setError(error.message);
-                setIsLoading(false);
-            });
-    }, []);
+        if (filterType == filterTypes[1]) {
+            carService
+                .getCRSCars()
+                .then((res) => {
+                    setCars(res.data);
+                    setIsLoading(false);
+                })
+                .catch((error) => {
+                    setError(error.message);
+                    setIsLoading(false);
+                });
+        } else if (filterType == filterTypes[2]) {
+            carService
+                .getThirdParty()
+                .then((res) => {
+                    setCars(res.data);
+                    setIsLoading(false);
+                })
+                .catch((error) => {
+                    setError(error.message);
+                    setIsLoading(false);
+                });
+        } else {
+            carService
+                .getAllCars()
+                .then((res) => {
+                    setCars(res.data);
+                    setIsLoading(false);
+                })
+                .catch((error) => {
+                    setError(error.message);
+                    setIsLoading(false);
+                });
+        }
+    }, [filterType]);
 
     return (
         <div className="container mx-auto max-w-7xl my-5 flex flex-col">
+            <select
+                className="select select-bordered w-full max-w-xs mt-7 ml-7"
+                value={filterType}
+                onChange={(e) => setFilterType(e.target.value)}
+            >
+                {filterTypes.map((type) => (
+                    <option>{type}</option>
+                ))}
+            </select>
             {isLoading && <Loader />}
             {error ? (
                 <ErrorMessage>{error}</ErrorMessage>

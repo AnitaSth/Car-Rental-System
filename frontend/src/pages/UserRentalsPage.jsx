@@ -49,6 +49,9 @@ const UserRentalsPage = () => {
                                 <th>End Date</th>
                                 <th>Duration</th>
                                 <th>Total Cost</th>
+                                <th>Payment Method</th>
+                                <th>Status</th>
+                                <th>Payment Date</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -77,6 +80,17 @@ const UserRentalsPage = () => {
                                     </td>
                                     <td>{rental.duration}</td>
                                     <td>{rental.totalCost}</td>
+                                    <td>{rental.payment.paymentMethod}</td>
+                                    <td>{rental.payment.status}</td>
+                                    <td>
+                                        {rental.payment.paymentDate
+                                            ? `${new Date(
+                                                  rental.payment.paymentDate
+                                              ).toDateString()} ${new Date(
+                                                  rental.payment.paymentDate
+                                              ).toLocaleTimeString()}`
+                                            : "Not Paid"}
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>

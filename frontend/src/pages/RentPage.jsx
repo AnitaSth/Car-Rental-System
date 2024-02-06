@@ -86,8 +86,6 @@ const RentPage = () => {
 
             const rentalId = rentalResponse.data.id;
 
-            let paymentResponse;
-
             if (paymentMethod == "Cash") {
                 const payload = {
                     userId: user.id,
@@ -96,7 +94,17 @@ const RentPage = () => {
                     paymentMethod,
                 };
 
-                paymentResponse = await paymentService.pay(payload, user.token);
+                const paymentResponse = await paymentService.pay(
+                    payload,
+                    user.token
+                );
+
+                if (paymentResponse.data) {
+                    toast("The car is rented", { type: "success" });
+                    navigate("/rentals");
+                } else {
+                    toast("An error occurred", { type: "error" });
+                }
             } else {
                 const unit_price = car.rentalPrice;
                 const name = user.fullName;
@@ -134,17 +142,14 @@ const RentPage = () => {
                     paymentMethod,
                 };
 
-                paymentResponse = await paymentService.pay(payload, user.token);
+                const paymentResponse = await paymentService.pay(
+                    payload,
+                    user.token
+                );
 
                 if (paymentResponse.data) {
                     window.location.href = `${paymentResponse?.data?.data?.payment_url}`;
                 }
-            }
-
-            if (paymentResponse.data) {
-                toast("The car is rented", { type: "success" });
-            } else {
-                toast("An error occurred", { type: "error" });
             }
         } else {
             navigate(`/login?redirect=/cars/${carId}`, { replace: false });
