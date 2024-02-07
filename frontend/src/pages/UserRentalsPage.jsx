@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import rentalService from "../services/rentalService";
-import { useAuth } from "../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 import ErrorMessage from "../components/ErrorMessage";
 import Loader from "../components/Loader";
-import { useNavigate } from "react-router-dom";
+import RentalModal from "../components/RentalModal";
+import { useAuth } from "../hooks/useAuth";
+import rentalService from "../services/rentalService";
 
 const UserRentalsPage = () => {
     const { user } = useAuth();
@@ -52,6 +53,7 @@ const UserRentalsPage = () => {
                                 <th>Payment Method</th>
                                 <th>Status</th>
                                 <th>Payment Date</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -90,6 +92,25 @@ const UserRentalsPage = () => {
                                                   rental.payment.paymentDate
                                               ).toLocaleTimeString()}`
                                             : "Not Paid"}
+                                    </td>
+                                    <td>
+                                        <button
+                                            className="btn btn-primary btn-sm"
+                                            onClick={() =>
+                                                document
+                                                    .getElementById(
+                                                        `feedback-${rental.id}`
+                                                    )
+                                                    .showModal()
+                                            }
+                                        >
+                                            Feedback
+                                        </button>
+                                        <RentalModal
+                                            carId={rental.carId}
+                                            rentalId={rental.id}
+                                            car={rental.car}
+                                        />
                                     </td>
                                 </tr>
                             ))}

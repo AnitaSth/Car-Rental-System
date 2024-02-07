@@ -1,10 +1,10 @@
-﻿using CRS_API.DB;
+﻿using AutoMapper;
 using CRS_API.Models.Domain;
 using CRS_API.Models.DTO;
+using CRS_API.Repositories;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+
 
 namespace CRS_API.Controllers
 {
@@ -12,89 +12,41 @@ namespace CRS_API.Controllers
 	[ApiController]
 	public class FeedbacksController : ControllerBase
 	{
-		private readonly CRSDbContext _db;
+		private readonly IMapper mapper;
+		private readonly IFeedbackRepository feedbackRepository;
 
-		public FeedbacksController(CRSDbContext _db)
+		public FeedbacksController(IMapper mapper, IFeedbackRepository feedbackRepository)
         {
-			this._db = _db;
+			this.mapper = mapper;
+			this.feedbackRepository = feedbackRepository;
 		}
 
 		[HttpGet]
-		[Authorize(Roles = "Admin")]
-		public ActionResult<List<FeedbackDto>> GetAll()
+		//[Authorize(Roles = "Admin")]
+		public async Task<IActionResult> GetAll()
 		{
-			List<Feedback> feedbacks = _db.Feedbacks.Include("User").Include("Car").ToList();
+			// Get Data From Database - Domain models
+			var feeedbacksDomain = await feedbackRepository.GetAllAsync();
 
-			List<FeedbackDto> feedbacksDto = new List<FeedbackDto>();
-
-			foreach (var feedback in feedbacks)
-			{
-				feedbacksDto.Add(new FeedbackDto()
-				{
-					Id = feedback.Id,
-					Rating = feedback.Rating,
-					Description = feedback.Description,
-					UserId = feedback.UserId,
-					CarId = feedback.CarId,
-					User = new UserDto
-					{
-						Id = feedback.User.Id,
-						PhoneNumber = feedback.User.PhoneNumber,
-						FullName = feedback.User.FullName,
-						Role = feedback.User.Role.ToString(),
-					},
-					Car = new CarResponseDto
-					{
-						Id = feedback.Car.Id,
-						Manufacturer = feedback.Car.Manufacturer,
-						Model = feedback.Car.Model,
-					}
-				});
-			}
-
+			// Map Domain Models to DTOs
+			var feedbacksDto = mapper.Map<List<FeedbackDto>>(feeedbacksDomain);
 
 			return Ok(feedbacksDto);
 		}
 
 
 		[HttpPost]
-		[Authorize(Roles = "Admin, Customer, Vehicl")]
-		public ActionResult<FeedbackDto> Create([FromBody] FeedbackRequestDto feedbackRequestDto) 
+		[Authorize]
+		public async Task<IActionResult> Create([FromBody] FeedbackRequestDto feedbackRequestDto) 
 		{
-			Feedback feedback = new Feedback
-			{
-				Rating = feedbackRequestDto.Rating,
-				Description = feedbackRequestDto.Description,
-				UserId = feedbackRequestDto.UserId,
-				CarId = feedbackRequestDto.CarId,
-			}; 
+			// Map or Convert DTO to Domain Model
+			var feedbackDomain = mapper.Map<Feedback>(feedbackRequestDto);
 
-			_db.Add(feedback);
-			_db.SaveChanges();
+			// Use Domain Model to create Car
+			feedbackDomain = await feedbackRepository.CreateAsync(feedbackDomain);
 
-			feedback = _db.Feedbacks.Include("User").Include("Car").FirstOrDefault(f => f.Id == feedback.Id);
-
-			FeedbackDto feedbackDto = new FeedbackDto
-			{
-				Id = feedback.Id,
-				Rating = feedback.Rating,
-				Description = feedback.Description,
-				UserId = feedback.UserId,
-				CarId = feedback.CarId,
-				User = new UserDto
-				{
-					Id = feedback.User.Id,
-					PhoneNumber = feedback.User.PhoneNumber,
-					FullName = feedback.User.FullName,
-					Role = feedback.User.Role.ToString(),
-				},
-				Car = new CarResponseDto
-				{
-					Id = feedback.Car.Id,
-					Manufacturer = feedback.Car.Manufacturer,
-					Model = feedback.Car.Model,
-				}
-			};
+			// Map Domain model back to DTO
+			var feedbackDto = mapper.Map<FeedbackDto>(feedbackDomain);
 
 			return Ok(feedbackDto);
 		}

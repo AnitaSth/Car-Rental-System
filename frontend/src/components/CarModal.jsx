@@ -3,7 +3,7 @@ import { useAuth } from "../hooks/useAuth";
 import carService from "../services/carService";
 import ErrorMessage from "./ErrorMessage";
 
-const Modal = ({ edit, carId, setCars }) => {
+const CarModal = ({ edit, carId, setCars }) => {
     const fuelTypes = ["Petrol", "Diesel", "Electric"];
     const transmissionTypes = ["Automatic", "Manual"];
     const conditions = ["Excellent", "Good", "Average", "Bad"];
@@ -308,4 +308,4 @@ const Modal = ({ edit, carId, setCars }) => {
     );
 };
 
-export default Modal;
+export default CarModal;

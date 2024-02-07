@@ -33,7 +33,7 @@ namespace CRS_API.Repositories
 
 		public async Task<Car?> GetByIdAsync(Guid id)
 		{
-			return await _db.Cars.Include("User").FirstOrDefaultAsync(car => car.Id == id);
+			return await _db.Cars.Include("User").Include(car => car.Feedbacks).FirstOrDefaultAsync(car => car.Id == id);
 		}
 
 		public async Task<Car> CreateAsync(Car car)

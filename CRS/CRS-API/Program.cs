@@ -55,6 +55,7 @@ builder.Services.AddDbContext<CRSDbContext>(options => options.UseSqlServer(buil
 builder.Services.AddScoped<ICarRepository, SQLCarRepository>();
 builder.Services.AddScoped<IUserRepository, SQLUserRepository>();
 builder.Services.AddScoped<IRentalsRepository, SQLRentalsRepository>();
+builder.Services.AddScoped<IFeedbackRepository, SQLFeedbackRepository>();
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
 

@@ -6,7 +6,7 @@ namespace CRS_API.Models.DTO
 	{
 		public Guid Id { get; set; }
 		public float Rating { get; set; }
-		public String Description { get; set; }
+		public string Description { get; set; }
 		public Guid UserId { get; set; }
 		public Guid CarId { get; set; }
 

@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
-import rentalService from "../services/rentalService";
+import { MdAddCircle } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { useAuth } from "../hooks/useAuth";
+import carService from "../services/carService";
+import CarModal from "./CarModal";
 import ErrorMessage from "./ErrorMessage";
 import Loader from "./Loader";
-import { useNavigate } from "react-router-dom";
-import carService from "../services/carService";
-import { MdAddCircle } from "react-icons/md";
-import Modal from "./Modal";
-import { toast } from "react-toastify";
 
 const AdminCars = () => {
     const { user } = useAuth();
@@ -23,24 +22,22 @@ const AdminCars = () => {
     useEffect(() => {
         setIsLoading(true);
         if (user) {
-            if (user.role === "Admin") {
-                carService
-                    .getAllCars()
-                    .then((res) => {
-                        setCars(res.data);
-                        setIsLoading(false);
-                    })
-                    .catch((error) => {
-                        setError(error.message);
-                        setIsLoading(false);
-                    });
-            } else {
-                navigate("/login");
-            }
+            carService
+                .getAllCars()
+                .then((res) => {
+                    setCars(res.data);
+                    setIsLoading(false);
+                })
+                .catch((error) => {
+                    setError(error.message);
+                    setIsLoading(false);
+                });
         } else {
             navigate("/login");
         }
     }, [user, navigate]);
+
+    console.log(cars);
 
     const deleteCarHandler = async (carId) => {
         const confirm = window.confirm("Are you sure you want to delete?");
@@ -130,7 +127,7 @@ const AdminCars = () => {
                             ))}
                         </tbody>
                     </table>
-                    <Modal edit={edit} carId={carId} setCars={setCars} />
+                    <CarModal edit={edit} carId={carId} setCars={setCars} />
                 </div>
             )}
         </div>
