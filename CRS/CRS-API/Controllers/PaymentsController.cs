@@ -73,7 +73,7 @@ namespace CRS_API.Controllers
 				var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
 
 				var client = new HttpClient();
-				client.DefaultRequestHeaders.Add("Authorization", "key 1715387012d54b76a2bca18ec569b45a");
+				client.DefaultRequestHeaders.Add("Authorization", "key a2f54f76b8a1439e8d5fba8d609a064a");
 
 				var response = await client.PostAsync(url, content);
 
