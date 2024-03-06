@@ -19,12 +19,17 @@ const Navbar = () => {
                 <li>
                     <Link to="/cars">Cars</Link>
                 </li>
-                <li>
-                    <Link to="/rentals">Rentals</Link>
-                </li>
-                <li>
-                    <Link to="/profile">Profile</Link>
-                </li>
+                {user && (
+                    <li>
+                        <Link to="/rentals">Rentals</Link>
+                    </li>
+                )}
+                {user && (
+                    <li>
+                        <Link to="/profile">Profile</Link>
+                    </li>
+                )}
+
                 {user?.role === "Admin" && (
                     <li>
                         <Link to="/admin">Admin</Link>

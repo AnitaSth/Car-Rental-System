@@ -3,6 +3,9 @@ import { Link } from "react-router-dom";
 import ErrorMessage from "../components/ErrorMessage";
 import Loader from "../components/Loader";
 import carService from "../services/carService";
+import { MdAddCircle } from "react-icons/md";
+import CarModal from "../components/CarModal";
+import { useAuth } from "../hooks/useAuth";
 
 const CarsPage = () => {
     const [cars, setCars] = useState([]);
@@ -11,6 +14,11 @@ const CarsPage = () => {
 
     const filterTypes = ["All", "Only CRS", "Third Party"];
     const [filterType, setFilterType] = useState(filterTypes[0]);
+
+    const [edit, setEdit] = useState(false);
+    const [carId, setCarId] = useState("");
+
+    const { user } = useAuth();
 
     useEffect(() => {
         setIsLoading(true);
@@ -52,15 +60,37 @@ const CarsPage = () => {
 
     return (
         <div className="container mx-auto max-w-7xl my-5 flex flex-col">
-            <select
-                className="select select-bordered w-full max-w-xs mt-7 ml-7"
-                value={filterType}
-                onChange={(e) => setFilterType(e.target.value)}
-            >
-                {filterTypes.map((type) => (
-                    <option>{type}</option>
-                ))}
-            </select>
+            <div>
+                <div className="flex justify-between">
+                    <select
+                        className="select select-bordered w-full max-w-xs mt-7 ml-7"
+                        value={filterType}
+                        onChange={(e) => setFilterType(e.target.value)}
+                    >
+                        {filterTypes.map((type) => (
+                            <option key={type}>{type}</option>
+                        ))}
+                    </select>
+
+                    {user?.role === "VehicleOwner" && (
+                        <button
+                            className="btn btn-outline btn-success w-44 self-end mr-8"
+                            onClick={() => {
+                                document
+                                    .getElementById("car_modal")
+                                    .showModal();
+                                setEdit(false);
+                            }}
+                        >
+                            <MdAddCircle />
+                            Add Car
+                        </button>
+                    )}
+                </div>
+
+                <CarModal edit={edit} carId={carId} setCars={setCars} />
+            </div>
+
             {isLoading && <Loader />}
             {error ? (
                 <ErrorMessage>{error}</ErrorMessage>

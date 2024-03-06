@@ -6,5 +6,6 @@ namespace CRS_API.Repositories
 	{
 		Task<List<Feedback>> GetAllAsync();
 		Task<Feedback> CreateAsync(Feedback feedback);
+		Task<List<Feedback>> GetByCarIdAsync(Guid carId);
 	}
 }

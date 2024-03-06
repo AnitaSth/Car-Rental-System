@@ -38,7 +38,7 @@ const UserRentalsPage = () => {
                 <Loader />
             ) : error ? (
                 <ErrorMessage>{error}</ErrorMessage>
-            ) : (
+            ) : rentals.length > 0 ? (
                 <div className="overflow-x-auto">
                     <table className="table">
                         {/* head */}
@@ -117,6 +117,10 @@ const UserRentalsPage = () => {
                         </tbody>
                     </table>
                 </div>
+            ) : (
+                <h1 className="text-center text-lg font-semibold">
+                    No Rentals Yet
+                </h1>
             )}
         </div>
     );

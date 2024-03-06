@@ -37,8 +37,6 @@ const AdminCars = () => {
         }
     }, [user, navigate]);
 
-    console.log(cars);
-
     const deleteCarHandler = async (carId) => {
         const confirm = window.confirm("Are you sure you want to delete?");
 

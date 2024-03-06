@@ -4,11 +4,14 @@ import ErrorMessage from "../components/ErrorMessage";
 import Loader from "../components/Loader";
 import { useAuth } from "../hooks/useAuth";
 import carService from "../services/carService";
+import feedbackService from "../services/feedbackService";
 
 const CarDetailsPage = () => {
     const [car, setCar] = useState({});
     const [error, setError] = useState("");
+    const [feedbackError, setFeedbackError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [isFeedbackLoading, setIsFeedbackLoading] = useState(false);
     const [feedbacks, setFeedbacks] = useState([]);
 
     const { user } = useAuth();
@@ -23,11 +26,21 @@ const CarDetailsPage = () => {
             .then((res) => {
                 setCar(res.data);
                 setIsLoading(false);
-                setFeedbacks(res.data.feedbacks);
             })
             .catch((error) => {
                 setError(error.message);
                 setIsLoading(false);
+            });
+
+        feedbackService
+            .getFeedbackById(carId)
+            .then((res) => {
+                setIsFeedbackLoading(false);
+                setFeedbacks(res.data);
+            })
+            .catch((error) => {
+                setFeedbackError(error.message);
+                setIsFeedbackLoading(false);
             });
     }, [carId]);
 
@@ -137,32 +150,35 @@ const CarDetailsPage = () => {
                                 </button>
                             </div>
                         </div>
-                        {feedbacks.length > 0 && (
-                            <div className="bg-white p-3 mt-8">
-                                <h1 className="text-center font-bold text-xl mb-10">
-                                    Feedbacks
-                                </h1>
-                                <div className="flex my-5 ml-2 gap-x-5 flex-wrap">
-                                    {feedbacks.map((feedback) => (
-                                        <div
-                                            key={feedback.id}
-                                            className="bg-gray-200 rounded-md w-60 p-3 flex flex-col gap-y-3"
-                                        >
-                                            <p>Rating: {feedback.rating}</p>
-                                            <p>
-                                                Description:{" "}
-                                                {feedback.description}
-                                            </p>
-                                            <p>
-                                                By:{" "}
-                                                {feedback.user
-                                                    ? feedback.user.fullName
-                                                    : "Unknown"}
-                                            </p>
-                                        </div>
-                                    ))}
+                        {isFeedbackLoading ? (
+                            <Loader />
+                        ) : feedbackError ? (
+                            <ErrorMessage>{feedbackError}</ErrorMessage>
+                        ) : (
+                            feedbacks.length > 0 && (
+                                <div className="bg-white p-3 mt-8">
+                                    <h1 className="text-center font-bold text-xl mb-10">
+                                        Feedbacks
+                                    </h1>
+                                    <div className="flex my-5 ml-2 gap-x-5 flex-wrap">
+                                        {feedbacks.map((feedback) => (
+                                            <div
+                                                key={feedback.id}
+                                                className="bg-gray-200 rounded-md w-60 p-3 flex flex-col gap-y-3"
+                                            >
+                                                <p>Rating: {feedback.rating}</p>
+                                                <p>
+                                                    Description:{" "}
+                                                    {feedback.description}
+                                                </p>
+                                                <p>
+                                                    By: {feedback.user.fullName}
+                                                </p>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
-                            </div>
+                            )
                         )}
                     </>
                 )}
