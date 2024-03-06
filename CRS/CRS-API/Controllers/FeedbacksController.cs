@@ -34,6 +34,18 @@ namespace CRS_API.Controllers
 			return Ok(feedbacksDto);
 		}
 
+		[HttpGet("{id:Guid}")]
+		public async Task<IActionResult> GetByCarId([FromRoute] Guid id)
+		{
+			// Get Data From Database - Domain models
+			var feeedbacksDomain = await feedbackRepository.GetByCarIdAsync(id);
+
+			// Map Domain Models to DTOs
+			var feedbacksDto = mapper.Map<List<FeedbackDto>>(feeedbacksDomain);
+
+			return Ok(feedbacksDto);
+		}
+
 
 		[HttpPost]
 		[Authorize]

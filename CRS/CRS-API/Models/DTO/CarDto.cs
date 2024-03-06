@@ -19,7 +19,5 @@ namespace CRS_API.Models.DTO
 		public string Image { get; set; } = string.Empty;
 		public bool Availability { get; set; } = true;
 		public UserDto User { get; set; }
-
-		public ICollection<FeedbackDto> Feedbacks { get; } = new List<FeedbackDto>();
 	}
 }

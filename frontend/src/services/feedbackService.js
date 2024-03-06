@@ -8,6 +8,10 @@ class FeedbackService {
             },
         });
     }
+
+    getFeedbackById(carId) {
+        return apiClient.get(`/feedbacks/${carId}`);
+    }
 }
 
 export default new FeedbackService();
