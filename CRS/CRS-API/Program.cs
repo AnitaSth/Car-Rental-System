@@ -56,6 +56,7 @@ builder.Services.AddScoped<ICarRepository, SQLCarRepository>();
 builder.Services.AddScoped<IUserRepository, SQLUserRepository>();
 builder.Services.AddScoped<IRentalsRepository, SQLRentalsRepository>();
 builder.Services.AddScoped<IFeedbackRepository, SQLFeedbackRepository>();
+builder.Services.AddScoped<INotificationRepository, SQLNotificationRepository>();
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
 

@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { useAuth } from "../hooks/useAuth";
 import rentalService from "../services/rentalService";
 import paymentService from "../services/paymentService";
+import notificationService from "../services/notificationService";
 
 const RentPage = () => {
     const [car, setCar] = useState({});
@@ -101,6 +102,15 @@ const RentPage = () => {
 
                 if (paymentResponse.data) {
                     toast("The car is rented", { type: "success" });
+                    const notification = {
+                        title: "New Rental",
+                        description: `${car.manufacturer} - ${car.model} has been rented by ${user.fullName} - ${user.phoneNumber}`,
+                        userId: user.id,
+                    };
+                    await notificationService.addNotification(
+                        notification,
+                        user.token
+                    );
                     navigate("/rentals");
                 } else {
                     toast("An error occurred", { type: "error" });
@@ -149,6 +159,15 @@ const RentPage = () => {
 
                 if (paymentResponse.data) {
                     window.location.href = `${paymentResponse?.data?.data?.payment_url}`;
+                    const notification = {
+                        title: "New Rental",
+                        description: `${car.manufacturer} - ${car.model} has been rented by ${user.fullName} - ${user.phoneNumber}`,
+                        userId: user.id,
+                    };
+                    await notificationService.addNotification(
+                        notification,
+                        user.token
+                    );
                 }
             }
         } else {
