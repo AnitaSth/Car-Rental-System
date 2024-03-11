@@ -4,8 +4,8 @@ import { useAuth } from "../../hooks/useAuth";
 import { useLogout } from "../../hooks/useLogout";
 
 const Navbar = () => {
-    const { user, dispatch } = useAuth();
-    const { logout } = useLogout();
+  const { user } = useAuth();
+  const { logout } = useLogout();
 
     return (
         <nav className="flex items-center justify-between px-10 py-4 bg-blue-500 text-white">
