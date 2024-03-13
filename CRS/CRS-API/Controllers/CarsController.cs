@@ -15,13 +15,11 @@ namespace CRS_API.Controllers
 	[ApiController]
 	public class CarsController : ControllerBase
 	{
-		private readonly CRSDbContext _db;
 		private readonly ICarRepository carRepository;
 		private readonly IMapper mapper;
 
-		public CarsController(CRSDbContext _db, ICarRepository carRepository, IMapper mapper)
+		public CarsController(ICarRepository carRepository, IMapper mapper)
 		{
-			this._db = _db;
 			this.carRepository = carRepository;
 			this.mapper = mapper;
 		} 

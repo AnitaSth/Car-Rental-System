@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import carService from "../services/carService";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import ErrorMessage from "../components/ErrorMessage";
 import Loader from "../components/Loader";
 import DateTimePicker from "react-datetime-picker";
@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { useAuth } from "../hooks/useAuth";
 import rentalService from "../services/rentalService";
 import paymentService from "../services/paymentService";
+import notificationService from "../services/notificationService";
 
 const RentPage = () => {
   const [car, setCar] = useState({});
@@ -28,6 +29,7 @@ const RentPage = () => {
   const carId = location.pathname.split("/")[2];
 
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     setIsLoading(true);
@@ -98,6 +100,13 @@ const RentPage = () => {
 
         if (paymentResponse.data) {
           toast("The car is rented", { type: "success" });
+          const notification = {
+            title: "New Rental",
+            description: `${car.manufacturer} - ${car.model} has been rented by ${user.fullName} - ${user.phoneNumber}`,
+            userId: user.id,
+          };
+          await notificationService.addNotification(notification, user.token);
+
           navigate("/rentals");
         } else {
           toast("An error occurred", { type: "error" });

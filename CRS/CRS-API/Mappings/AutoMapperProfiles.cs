@@ -18,6 +18,8 @@ namespace CRS_API.Mappings
 			CreateMap<Payment, PaymentDomainDto>().ReverseMap();
 			CreateMap<Feedback, FeedbackDto>().ReverseMap();
 			CreateMap<Feedback, FeedbackRequestDto>().ReverseMap();	
+			CreateMap<Notification, NotificationDto>().ReverseMap();	
+			CreateMap<Notification, NotificationRequestDto>().ReverseMap();	
 
 		}
 	}

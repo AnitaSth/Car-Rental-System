@@ -19,7 +19,9 @@ namespace CRS_API.DB
 
 		public DbSet<Feedback> Feedbacks { get; set; }
 
-		public DbSet<Payment> Payment { get; set; }	
+		public DbSet<Payment> Payment { get; set; }
+		
+		public DbSet<Notification> Notification { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
@@ -32,6 +34,8 @@ namespace CRS_API.DB
 			modelBuilder.Entity<Payment>().HasOne(e => e.User).WithMany(e => e.Payments).HasForeignKey(e => e.UserId).IsRequired().OnDelete(DeleteBehavior.NoAction);
 
 			modelBuilder.Entity<Payment>().HasOne(e => e.Rental).WithOne(e => e.Payment).HasForeignKey<Payment>(e => e.RentalId).IsRequired().OnDelete(DeleteBehavior.NoAction);
+
+			modelBuilder.Entity<Notification>().HasOne(e => e.User).WithMany(e => e.Notifications).HasForeignKey(e => e.UserId).IsRequired().OnDelete(DeleteBehavior.NoAction);
 		}
 	}
 }
