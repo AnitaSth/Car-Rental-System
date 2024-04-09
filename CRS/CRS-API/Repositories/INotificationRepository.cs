@@ -6,5 +6,7 @@ namespace CRS_API.Repositories
 	{
 		Task<List<Notification>> GetAllAsync();
 		Task<Notification> CreateAsync(Notification notification);
+
+		Task<Notification?> UpdateAsync(Guid id);
 	}
 }

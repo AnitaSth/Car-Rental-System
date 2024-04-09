@@ -26,5 +26,19 @@ namespace CRS_API.Repositories
 			return notification;
 		}
 
+		public async Task<Notification> UpdateAsync(Guid id)
+		{
+			var existingNotification = await _db.Notification.FirstOrDefaultAsync(x => x.Id == id);
+
+			if (existingNotification == null)
+			{
+				return null;
+			}
+
+			existingNotification.IsSeen = true;
+
+			await _db.SaveChangesAsync();
+			return existingNotification;
+		}
 	}
 }

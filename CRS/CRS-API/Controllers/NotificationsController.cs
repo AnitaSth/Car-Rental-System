@@ -51,5 +51,23 @@ namespace CRS_API.Controllers
 
 			return Ok(notificationDto);
 		}
+
+		// Update notification
+		[HttpPut("{id:Guid}")]
+		public async Task<IActionResult> Update([FromRoute] Guid id)
+		{
+			// Check if car exists
+			var notificationDomain = await notificationRepository.UpdateAsync(id);
+
+			if (notificationDomain == null)
+			{
+				return NotFound();
+			}
+
+			// Convert Domain Model to DTO
+			var notificationDto = mapper.Map<NotificationDto>(notificationDomain);
+
+			return Ok(notificationDto);
+		}
 	}
 }
