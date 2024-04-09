@@ -16,6 +16,10 @@ class NotificationService {
             },
         });
     }
+
+    updateNofication(notificationId, token) {
+        return apiClient.put(`/notifications/${notificationId}`);
+    }
 }
 
 export default new NotificationService();
