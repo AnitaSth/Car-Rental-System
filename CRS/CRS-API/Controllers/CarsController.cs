@@ -132,7 +132,7 @@ namespace CRS_API.Controllers
 
 
 		[HttpDelete("{id:Guid}")]
-		[Authorize(Roles = "Admin, VehicleOwner")]
+		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> Delete([FromRoute] Guid id)
 		{
 			var carDomain = await carRepository.DeleteAsync(id);
@@ -140,15 +140,6 @@ namespace CRS_API.Controllers
 			if (carDomain == null)
 			{
 				return NotFound();
-			}
-
-			// Get current user id
-			var currentUserId = HttpContext.User.FindFirstValue("userId");
-
-			// Check if the author of the car is the current user
-			if (carDomain.UserId != Guid.Parse(currentUserId))
-			{
-				return Unauthorized();
 			}
 
 			return NoContent();

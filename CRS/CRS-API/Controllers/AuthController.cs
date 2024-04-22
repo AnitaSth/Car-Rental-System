@@ -70,7 +70,7 @@ namespace CRS_API.Controllers
 
 			UserResponseDto userDto = new UserResponseDto
 			{
-				Id = user.Id,
+				Id =user.Id,
 				PhoneNumber = user.PhoneNumber,
 				FullName = user.FullName,
 				Role = user.Role.ToString(),

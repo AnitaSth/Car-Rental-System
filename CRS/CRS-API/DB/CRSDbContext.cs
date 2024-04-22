@@ -33,7 +33,7 @@ namespace CRS_API.DB
 
 			modelBuilder.Entity<Payment>().HasOne(e => e.User).WithMany(e => e.Payments).HasForeignKey(e => e.UserId).IsRequired().OnDelete(DeleteBehavior.NoAction);
 
-			modelBuilder.Entity<Payment>().HasOne(e => e.Rental).WithOne(e => e.Payment).HasForeignKey<Payment>(e => e.RentalId).IsRequired().OnDelete(DeleteBehavior.NoAction);
+			modelBuilder.Entity<Payment>().HasOne(e => e.Rental).WithOne(e => e.Payment).HasForeignKey<Payment>(e => e.RentalId).IsRequired().OnDelete(DeleteBehavior.Cascade);
 
 			modelBuilder.Entity<Notification>().HasOne(e => e.User).WithMany(e => e.Notifications).HasForeignKey(e => e.UserId).IsRequired().OnDelete(DeleteBehavior.NoAction);
 		}
